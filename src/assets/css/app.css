@@ -284,6 +284,10 @@
     float: right;
 }
 
+.dataTables_paginate .page_jump input {
+    width: 50px;
+}
+
 .dataTables_paginate .page_jump .paginate_button {
     margin-left: 5px;
     cursor: pointer;

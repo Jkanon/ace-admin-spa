@@ -2,7 +2,7 @@
 
 # 简介
 
-基于Boostrap Ace Admin的单页面响应式后台管理前端系统。适合后端程序员或者没有时间学习新的前端框架的人员使用，减少学习成本，拿来即用。<br/>
+基于Boostrap Ace Admin的单页面响应式后台管理前端系统，适合后端程序员或者没有时间学习新的前端框架的人员使用，减少学习成本，拿来即用。<br/>
 目前仅实现了登录功能、用户管理列表，菜单管理列表，其它的待后续补充<br/>
 
 涉及技术栈：
@@ -19,8 +19,8 @@
 
 # 截图
 ![](https://s2.ax1x.com/2019/11/02/KL0buT.png)
-![](https://s2.ax1x.com/2019/11/02/KL0s3t.png)
-![](https://s2.ax1x.com/2019/11/02/KLB9v6.png)
+![](https://s2.ax1x.com/2019/11/02/KOpGT0.png)
+![](https://s2.ax1x.com/2019/11/02/KOplOs.png)
 
 # 特性
 - 前端路由
@@ -29,6 +29,7 @@
 - 引入layer来做模态框
 - 支持mock，前后端联调时可以无缝对接
 - 支持接口转发，用于联调
+- 支持ace的所有样式，具体可参考[Ace](http://ace.jeka.by/)
 
 # 使用
 - 准备工作
@@ -59,7 +60,13 @@ $ gulp build
 ```
 直接把dist中的文件丢到生产环境中去
 
-## 支持环境
+# 开发指导
+- 定义路由，修改src/app.js中的menus变量
+- 增加路由对应的前端页面，在[src/views/inner]("./src/views/inner)中添加html文件
+- 在[src/assets/js/inner]("./src/assets/js/inner)中添加页面同名的js文件
+这里js采用模块加载的写法，具体可以参考其它js文件的写法，同时在js中定义入口函数init，此函数将会在js文件加载完成之后调用
+
+# 支持环境
 
 IE8以上及现代浏览器。
 
@@ -67,7 +74,7 @@ IE8以上及现代浏览器。
 | --- | --- | --- | --- | --- |
 | IE8, Edge | latest version | latest version | latest version | latest version |
 
-## 最后
+# 最后
 
 欢迎大家来访
 
