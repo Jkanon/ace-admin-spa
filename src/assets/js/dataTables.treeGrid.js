@@ -74,6 +74,7 @@
             var select = settings._select;
             var dataTable = $(settings.nTable).dataTable().api();
             var sLeft = this.s.indentSize;
+            var indentColumnIndex = this.s.indentColumnIndex;
 
             var expandIcon = $(this.s.expandIcon);
             var collapseIcon = $(this.s.collapseIcon);
@@ -134,13 +135,17 @@
                     data.children.forEach(function (item) {
                         var newRow = dataTable.row.add(item);
                         var node = newRow.node();
-                        var treegridTd = $(node).find('.treegrid-control');
+                        var $node = $(node);
+                        var treegridTd = $node.find('.treegrid-control');
                         var left = (layer + 1) * sLeft;
-                        $(node).attr('parent-index', index);
+                        $node.attr('parent-index', index);
                         treegridTd.find('span').css('marginLeft', left + 'px');
-                        // TODO 这里改成可配置的
-                        treegridTd.next().css('paddingLeft', paddingLeft + left + 'px');
-                        $(node).insertAfter(prevRow);
+                        if (typeof indentColumnIndex == 'undefined') {
+                            treegridTd.next().css('paddingLeft', paddingLeft + left + 'px');
+                        } else {
+                            $($node.find('td')[indentColumnIndex]).css('paddingLeft', paddingLeft + left + 'px');
+                        }
+                        $node.insertAfter(prevRow);
                         prevRow = node;
                         subRows.push(node);
                     });
@@ -364,6 +369,8 @@
 
     TreeGrid.defaults = {
         indentSize: 12,
+        indentColumnIndex: undefined,
+        expandRowByClick: false,
         expandAll: false,
         expandIcon: '<span>+</span>',
         collapseIcon: '<span>-</span>'

@@ -176,7 +176,7 @@ define(['ace', 'common'], function(ACE, common){
                     },{
                         "icon": "",
                         "name": "操作日志",
-                        "href": "logs"
+                        "href": "#!logs"
                     }
                 ]
             },
