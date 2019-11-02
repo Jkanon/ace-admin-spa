@@ -62,8 +62,8 @@ $ gulp build
 
 # 开发指导
 - 定义路由，修改src/app.js中的menus变量
-- 增加路由对应的前端页面，在[src/views/inner]("./src/views/inner)中添加html文件
-- 在[src/assets/js/inner]("./src/assets/js/inner)中添加页面同名的js文件
+- 增加路由对应的前端页面，在[src/views/inner](src/views/inner)中添加html文件
+- 在[src/assets/js/inner](src/assets/js/inner)中添加页面同名的js文件
 这里js采用模块加载的写法，具体可以参考其它js文件的写法，同时在js中定义入口函数init，此函数将会在js文件加载完成之后调用
 
 # 支持环境
