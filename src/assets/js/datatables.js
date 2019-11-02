@@ -214,6 +214,7 @@ define(['common', 'datatables.net-bs'], function(common){
         ,lengthChange: true //是否允许改变分页显示条数
         ,lengthMenu: [10, 25, 50, 75, 100] //默认分页条数下拉选项
         ,pageLength: 10 //默认分页条数
+        ,pagingType: "full_numbers"
         ,paging: true //默认开启分页
         ,searching: true //默认支持搜索
         ,searchingDisplay: false //默认不显示搜索栏
@@ -504,6 +505,7 @@ define(['common', 'datatables.net-bs'], function(common){
             ,language: options.lang //提示信息
             ,lengthMenu: options.lengthMenu //每页长度
             ,lengthChange: options.lengthChange // 是否允许产品改变表格每页显示的记录数
+            ,pagingType: options.pagingType
             ,pageLength: options.pageLength
             ,paging: options.paging
             ,searching: options.searching
@@ -527,18 +529,59 @@ define(['common', 'datatables.net-bs'], function(common){
                 that.layHeader = $(options.api.table().header());
                 that.layBody = $(options.api.table().body());
 
-                /*var _pageJump = [
+                var _pageJump = [
                     '<div class="page_jump">'
                     ,'{{if pages>0}}'
                     ,'<input type="number" min="1" max="{{pages}}">'
                     ,'<a class="paginate_button" tabindex="0">跳转</a>'
-                    ,'{{/if}}}'
+                    ,'{{/if}}'
                     ,'</div>'
                 ].join('');
+                var pageInfo = options.api.page.info();
                 that.pagination = $('.dataTables_paginate', options.api.table().container());
                 that.pagination
                     .wrapInner($('<div>', {class: 'pagination'}))
-                    .append(template.render(_pageJump, options.api.page.info()));*/
+                    .append(template.render(_pageJump, pageInfo));
+                var jumpNumberInput = $('.page_jump input', that.pagination);
+                if (pageInfo.pages > 0) {
+                    function fixJumpNumber() {
+                        console.log('fix');
+                        var val = parseInt(jumpNumberInput.val());
+                        if (isNaN(val)) {
+                            jumpNumberInput.val('');
+                        } else {
+                            if (val > pageInfo.pages) {
+                                val = pageInfo.pages;
+                            } else if (val < 1) {
+                                val = 0;
+                            }
+                            jumpNumberInput.val(val);
+                        }
+                    }
+                    function jumpAction() {
+                        fixJumpNumber();
+                        var val = parseInt(jumpNumberInput.val());
+                        if (!isNaN(val)) {
+                            options.api.page(val - 1).draw(false);
+                        }
+                    }
+                    $('.page_jump', that.pagination)
+                        .off(ace.click_event, '.paginate_button')
+                        .off('keypress', 'input')
+                        .off('input', 'input')
+                        .on(ace.click_event, '.paginate_button', jumpAction)
+                        .on('keypress', 'input', function(e) {
+                            if (e.which == 13) {
+                                jumpAction();
+                            }
+                        })
+                        .on('input', 'input', fixJumpNumber)
+                    ;
+                } else {
+                    jumpNumberInput.attr('disabled', true);
+                    $('.page_jump .paginate_button', that.pagination).addClass('disabled');
+                }
+
                 //$(this).closest('.layui-form').attr('lay-filter', 'LAY-table-'+that.index);
                 var tooltips = $('[data-rel=tooltip]', options.elem);
                 tooltips && tooltips.tooltip();
