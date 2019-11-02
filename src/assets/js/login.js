@@ -27,9 +27,8 @@ function loginSubmit() {
                 /*layer.closeAll('loading');*/
                 layer.msg(ret.message,{icon: 2});
             }
-        }
-    })
-        .error(function(XMLHttpRequest, textStatus, errorThrown) {
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
             if(textStatus === "timeout") {
                 layer.msg("请求超时!", {icon: 5});
             } else {
@@ -45,7 +44,8 @@ function loginSubmit() {
                     layer.msg("请求出错了！", {icon: 5});
                 }
             }
-        })
+        }
+    })
     ;
 }
 
