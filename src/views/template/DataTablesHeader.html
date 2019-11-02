@@ -1,0 +1,19 @@
+<!-- 表格表头 -->
+<thead>
+{{each cols item1 i1}}
+<tr>
+    {{if detailView }}<th></th>{{/if}}
+    {{each item1 item2 i2}}
+    <th {{if item2[align]}}class="align-{{item2[align]}}"{{/if}}>
+    {{if item2.type === "checkbox"}}
+    <label class="pos-rel">
+        <input type="checkbox" class="ace" {{if item2[checkName]}}checked{{/if}}>
+        <span class="lbl"></span>
+    </label>
+    {{/if}}
+    {{item2.title||""}}
+    </th>
+    {{/each}}
+</tr>
+{{/each}}
+</thead>

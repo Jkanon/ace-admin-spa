@@ -1,0 +1,31 @@
+.cloud-login .cloud-body {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+}
+
+.cloud-login .cloud,
+.cloud-login .cloud2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(../images/cloud.png) no-repeat;
+    z-index: 1;
+    opacity: 0.5;
+}
+
+.cloud-login .cloud2 {
+    z-index: 2;
+}
+
+.cloud-login .cloud-background {
+    background: url(../images/loginbg.png) no-repeat center center;
+    width: 100%;
+    height: 585px;
+    overflow: hidden;
+    position: absolute;
+    top: 47px;
+}

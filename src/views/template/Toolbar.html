@@ -1,0 +1,28 @@
+<!-- 表格工具栏菜单 -->
+<div class="hidden-sm hidden-xs action-buttons">
+    {{each list item index}}
+    <a href="javascript:;" class="{{item.color}}{{if item.tooltip}} {{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{item.tooltip.title}}"{{else}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{item.pop.title}}"{{/if}}>
+    <i class="ace-icon fa fa-{{item.icon}} bigger-130"></i>
+    </a>
+    {{/each}}
+</div>
+
+<div class="hidden-md hidden-lg">
+    <div class="inline pos-rel">
+        <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">
+            <i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>
+        </button>
+
+        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+            {{each list item index}}
+            <li>
+                <a href="javascript:;" {{if item.tooltip}}class="{{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{item.tooltip.title}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{item.pop.title}}"{{/if}}>
+                    <span class="{{item.color}}">
+                        <i class="ace-icon fa fa-{{item.icon}} bigger-120"></i>
+                    </span>
+                </a>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</div>
