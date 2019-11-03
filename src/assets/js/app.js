@@ -77,7 +77,7 @@ template.defaults.imports.defaults = function(){
     return "";
 };
 
-define(['ace', 'common'], function(ACE, common){
+define(['ace-elements', 'common'], function(ACE, common){
     //通过requirejs引入时，ace.min.js中的这句话执行时ace.demo还未定义，因此这边手动重新执行一遍
     try {
         //true参数不可少，否则通过requirejs引入也无法真正执行
@@ -125,7 +125,13 @@ define(['ace', 'common'], function(ACE, common){
         $("#page-content").load("views/inner/" + path +".html",function() {
             if (path !== 'dashBoard') {
                 require(['inner/' + path], function (Demo) {
-                    Demo.init && Demo.init();
+                    if (Demo) {
+                        if (Demo.init) {
+                            Demo.init();
+                        } else {
+                            console.log("warn: 未发现入口函数");
+                        }
+                    }
                 }, function(err) {
                     console.log(err.requireType);
                     if ("scripterror" == err.requireType) {
