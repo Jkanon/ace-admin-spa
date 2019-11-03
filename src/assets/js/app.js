@@ -299,14 +299,7 @@ define(['ace', 'common'], function(ACE, common){
     //注入业务相关公共函数==============
     return {
         CONSTANT: {
-            UPDATE_METHOD: {
-                client: 1,
-                server: 0
-            },
-            REQUEST_FORM_UPDATE_STRATEGY: {
-                BY_ORDER: 0,
-                AT_THE_SAME_TIME: 1
-            }
+
         },
         /**
          * 提交数据（新增或者编辑数据）
