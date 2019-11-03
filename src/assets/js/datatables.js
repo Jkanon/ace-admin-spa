@@ -545,7 +545,6 @@ define(['common', 'datatables.net-bs'], function(common){
                 var jumpNumberInput = $('.page_jump input', that.pagination);
                 if (pageInfo.pages > 0) {
                     function fixJumpNumber() {
-                        console.log('fix');
                         var val = parseInt(jumpNumberInput.val());
                         if (isNaN(val)) {
                             jumpNumberInput.val('');

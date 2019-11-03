@@ -58,7 +58,7 @@ app.listen(port, function () {
     opn(uri);
 });
 
-const regInclude = /@@include\('([^']+)',\s*\{([^}]*)\}/g;
+const regInclude = /@@include\('([^']+)',\s*\{([^}]*)\}\s*\)/g;
 function assemblyHtml(data) {
     let ret = data.toString('utf-8');
     while(tempR = regInclude.exec(ret)) {

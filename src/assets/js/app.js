@@ -122,22 +122,28 @@ define(['ace-elements', 'common'], function(ACE, common){
 
     //异步加载子页面
     function load(path) {
-        $("#page-content").load("views/inner/" + path +".html",function() {
-            if (path !== 'dashBoard') {
-                require(['inner/' + path], function (Demo) {
-                    if (Demo) {
-                        if (Demo.init) {
-                            Demo.init();
-                        } else {
-                            console.log("warn: 未发现入口函数");
+        $("#page-content").load("views/inner/" + path +".html",function(responseTxt,statusTxt,xhr) {
+            if (xhr.status == 200) {
+                if (path !== 'dashBoard') {
+                    require(['inner/' + path], function (Demo) {
+                        if (Demo) {
+                            if (Demo.init) {
+                                Demo.init();
+                            } else {
+                                console.log("warn: 未发现入口函数");
+                            }
                         }
-                    }
-                }, function(err) {
-                    console.log(err.requireType);
-                    if ("scripterror" == err.requireType) {
+                    }, function(err) {
+                        console.log(err.requireType);
+                        if ("scripterror" == err.requireType) {
 
-                    }
-                });
+                        }
+                    });
+                }
+            } else if (xhr.status == 404) {
+                $('#page-content').html(template('tpl404'));
+            } else if (xhr.status == 500) {
+                $('#page-content').html(template('tpl500'));
             }
         });
     }
