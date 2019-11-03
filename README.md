@@ -24,7 +24,10 @@
 
 # 特性
 - 前端路由
+- SPA单页面应用
+- 前后端分离
 - 模块按需加载。引入RequireJS在网页端动态加载
+- 运行时前端模版引擎渲染
 - 对datatables进行二次封装，使得接口简单易用
 - 引入layer来做模态框
 - 支持mock，前后端联调时可以无缝对接
@@ -54,17 +57,44 @@ $ npm start
 $ npm run start:no-mock
 ```
 
-- 构建
+- 部署
 ```bash
-$ gulp build
+$ gulp build  // 然后直接把dist中的目标文件丢到生产环境中去
 ```
-直接把dist中的文件丢到生产环境中去
 
-# 开发指导
-- 定义路由，修改src/app.js中的menus变量
-- 增加路由对应的前端页面，在[src/views/inner](src/views/inner)中添加html文件
-- 在[src/assets/js/inner](src/assets/js/inner)中添加页面同名的js文件
-这里js采用模块加载的写法，具体可以参考其它js文件的写法，同时在js中定义入口函数init，此函数将会在js文件加载完成之后调用
+
+# 开发指南
+### 总体流程
+- 定义路由，修改`src/app.js`中的`menus`变量
+- 每个子页面由同名的`html`和`js`组成
+- 在[src/views/inner](src/views/inner)中添加路由对应的子页面html文件
+- 在[src/assets/js/inner](src/assets/js/inner)中添加子页面同名的js文件
+- `js`采用AMD规范的模块化加载方法。`js`文件通过`define`函数定义模块，同时可以声明依赖的其它模块
+- 需在`js`中定义入口函数`init`，此函数将在`js`文件加载完成之后调用
+- 模块化加载默认路径为`assets/js`，如果需要加载其它路径下的目录请填写相对路径
+
+### 前后端交互
+- 采用ajax交互
+- 前后端`token`通过`header`中的`X-Access-Token`字段进行交互。有需要可在`common.js`中的`ajax`函数中修改
+- 后端返回的`json`格式标准如下：
+```
+{
+    success: boolean,  // 请求是否成功
+    code: number,
+    data: object,   // 返回的数据，ajax回调取到的值即为这个
+    message: string // 错误提示
+}
+```
+- 可以根据需要适配接口格式。请修改`common.js`中的`rcsConfig["global"].response`字段，支持嵌套格式。同时需要单独修改`login.js`文件。
+
+### 数据mock
+- mock数据文件放在[mock/modules](mock/modules)下
+- mock数据文件主要声明需要mock的接口地址，请求方法，返回的数据
+
+### html公用模版引入
+- 在html文件中支持@@include函数引入公共模块
+- 公共模块文件将在打包构建的时候引入
+- 约定模块存放目录为[src/views/template](src/views/template)
 
 # 支持环境
 
