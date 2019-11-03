@@ -10,49 +10,55 @@ function loginSubmit() {
         username: $.trim($('#account').val()),
         password: $.trim($('#password').val())
     };
-    $.ajax({
-        type : "POST",
-        url : "/login",
-        data : JSON.stringify(obj),
-        contentType : "application/json",
-        dataType : "json",
-        success: function(ret) {
-            if (ret.code === 200) {
-                ace.data.set("token", ret.data.token);
-                ace.data.set("user", JSON.stringify(ret.data.userInfo));
-                setTimeout(function() {
-                    location.replace("index.html");
-                }, 1000);
-            } else {
-                /*layer.closeAll('loading');*/
-                layer.msg(ret.message,{icon: 2});
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            if(textStatus === "timeout") {
-                layer.msg("请求超时!", {icon: 5});
-            } else {
-                var responseJson = XMLHttpRequest.responseJSON;
-                if(responseJson && responseJson.message) {
-                    layer.msg(responseJson.message, {icon: 5});
-                    return;
+    if (obj.username == '') {
+        layer.msg("请填写用户名");
+    } else if (obj.password == '') {
+        layer.msg("密码不能为空");
+    } else {
+        $.ajax({
+            type : "POST",
+            url : "/login",
+            data : JSON.stringify(obj),
+            contentType : "application/json",
+            dataType : "json",
+            success: function(ret) {
+                if (ret.code === 200) {
+                    ace.data.set("token", ret.data.token);
+                    ace.data.set("user", JSON.stringify(ret.data.userInfo));
+                    setTimeout(function() {
+                        location.replace("index.html");
+                    }, 1000);
+                } else {
+                    /*layer.closeAll('loading');*/
+                    layer.msg(ret.message,{icon: 2});
                 }
-                var status = XMLHttpRequest.status;
-                if(status == '504'){
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                if(textStatus === "timeout") {
                     layer.msg("请求超时!", {icon: 5});
                 } else {
-                    layer.msg("请求出错了！", {icon: 5});
+                    var responseJson = XMLHttpRequest.responseJSON;
+                    if(responseJson && responseJson.message) {
+                        layer.msg(responseJson.message, {icon: 5});
+                        return;
+                    }
+                    var status = XMLHttpRequest.status;
+                    if(status == '504'){
+                        layer.msg("请求超时!", {icon: 5});
+                    } else {
+                        layer.msg("请求出错了！", {icon: 5});
+                    }
                 }
             }
-        }
-    })
-    ;
+        })
+        ;
+    }
 }
 
 //初始化页面中的DOM监听
 function initEventListener() {
     $(document).ready(function(){
-        $('#loginForm input:first').focus().lazy(checkHasVal);
+        $($('#loginForm input')[0]).focus().lazy(checkHasVal);
     })
     .on("keyup change", "input", function(e){
         $(this).lazy(checkHasVal);
@@ -70,7 +76,7 @@ function refreshVerifyCode(){
 
 function checkHasVal() {
     var canSubmit = true;
-    $('#loginForm input:required')
+    $('#loginForm input[required]')
         .each(function(index, element){
             if($(element).val().trim().length <= 0) {
                 canSubmit  = false;
