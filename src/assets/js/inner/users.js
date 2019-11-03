@@ -6,7 +6,7 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
             queryPage: "/sys/users",
             add: "/admusers",
             edit: "/admusers/{id}",
-            delete: "/admusers/{id}",
+            "delete": "/admusers/{id}",
             resetPwd: "/admusers/{id}/password",
             freeze: "/admusers/{id}/status/{status}",
         }
@@ -31,12 +31,12 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                     {field: 'phone', title: '手机号码'},
                     {field: 'email', title: '邮箱地址'},
                     {field: 'createTime', title: '创建时间'},
-                    {field: 'status', title: '状态', switch: {checkedValue: 0, type: 10, color: "green", event: "freeze"}},
+                    {field: 'status', title: '状态', "switch": {checkedValue: 0, type: 10, color: "green", event: "freeze"}},
                     {title: '操作', toolbar: [{
                             icon: 'key',
                             tooltip: {
                                 title: "重置密码",
-                                class: "tooltip-info"
+                                className: "tooltip-info"
                             },
                             color: "blue",
                             event: "resetpwd",
@@ -44,7 +44,7 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                             icon: 'trash-o',
                             tooltip: {
                                 title : "删除",
-                                class: "tooltip-error"
+                                className: "tooltip-error"
                             },
                             color: "red",
                             event: "delete",
@@ -129,7 +129,7 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                                 label: '性别',
                                 name: 'sex',
                                 options: [
-                                    {label: '男', value: 1, default: true},
+                                    {label: '男', value: 1, "default": true},
                                     {label: '女', value: 2}
                                 ]
                             }, {

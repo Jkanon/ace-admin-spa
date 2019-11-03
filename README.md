@@ -96,6 +96,10 @@ $ gulp build  // 然后直接把dist中的目标文件丢到生产环境中去
 - 公共模块文件将在打包构建的时候引入
 - 约定模块存放目录为[src/views/template](src/views/template)
 
+### ie8
+如果需要兼容ie8，请避免使用ie8的关键字。如delete, class, default, switch等<br/>
+本系统也没能避开关键字的坑，因此遗留着部分ie8的关键字，使用的时候请通过字符串下标的方式进行引用。
+
 # 支持环境
 
 IE8以上及现代浏览器。

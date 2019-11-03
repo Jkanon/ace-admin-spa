@@ -13,7 +13,7 @@ require.config({
         }
     },
     paths : {
-        "jquery": isLTIE8 ? "../components/components/jquery.1x/dist/jquery.min" : "../components/jquery/dist/jquery.min",
+        "jquery": isLTIE8 ? "../components/jquery.1x/dist/jquery.min" : "../components/jquery/dist/jquery.min",
         "jquery-mobile": "jquery.mobile.custom.min",
         "jquery.spring-friendly": "jquery.spring-friendly.min",
         "bootstrap": "../components/bootstrap/dist/js/bootstrap.min",
@@ -23,7 +23,7 @@ require.config({
         "datatables.net-bs": "../components/datatables.net-bs/js/dataTables.bootstrap.min",
         "datatables.treeGrid": "dataTables.treeGrid",
         "layer": "../components/layer/dist/layer",
-        "lodash": "../components/lodash/dist/lodash.min",
+        "lodash": "../components/lodash/lodash",
         //"jquery.maskedinput": "../components/jquery.maskedinput/dist/jquery.maskedinput.min"
         "jquery.inputmask": "../components/inputmask/dist/jquery.inputmask.bundle"
         , "jquery.inputlimiter": "../components/jquery-inputlimiter/jquery-inputlimiter/jquery.inputlimiter.1.3.1"
@@ -41,11 +41,11 @@ require.config({
         "bootstrap": {
             deps: ['jquery']
         },
-        "ace-elements": {
-            deps: ['jquery']
-        },
         "ace": {
-            deps: ['ace-elements', 'bootstrap']
+            deps: ['jquery', 'bootstrap']
+        },
+        "ace-elements": {
+            deps: ['ace']
         },
         "datatables.net": {
             deps: ['jquery.spring-friendly']
@@ -322,8 +322,10 @@ define(['ace', 'common'], function(ACE, common){
          * @param id
          */
         ,deleteData: function(api, id, callback){
-            common.delete(api["delete"].replace('{id}', id), null, function(ret){
-                typeof callback == 'function' && callback(ret);
+            common['delete'](api["delete"].replace('{id}', id), null, function(ret){
+                if (typeof callback == 'function') {
+                    callback(ret);
+                }
                 message.success("删除成功");
             })
         }

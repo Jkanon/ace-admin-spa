@@ -31,7 +31,7 @@ define(["datatables", "common", "app"], function (datatable, common, APP) {
                                 icon: "trash-o",
                                 tooltip: {
                                     title : "删除",
-                                    class: "tooltip-error"
+                                    className: "tooltip-error"
                                 },
                                 color: "red",
                                 event: "delete",

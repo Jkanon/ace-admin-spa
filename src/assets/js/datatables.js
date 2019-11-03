@@ -415,8 +415,8 @@ define(['common', 'datatables.net-bs'], function(common){
                             }()
                                 , '</div>'].join('');
                             return td;
-                        } else if(item3.type === 'switch' || item3.switch) {
-                            return template.render(TPL_SWITCH, $.extend(true, {data: data}, item3.switch))
+                        } else if(item3.type === 'switch' || item3["switch"]) {
+                            return template.render(TPL_SWITCH, $.extend(true, {data: data}, item3["switch"]))
                         }
 
                         var wrapperText = function() {
@@ -466,17 +466,17 @@ define(['common', 'datatables.net-bs'], function(common){
                             }
 
                             var ret = function() {
-                                if (item3.default) {
-                                    return (typeof data === 'undefined' || data === '' || data === null) ? item3.default : String(data);
+                                if (item3["default"]) {
+                                    return (typeof data === 'undefined' || data === '' || data === null) ? item3["default"] : String(data);
                                 }
-                                return (typeof data === 'undefined' || data === null) ? (item3.default || EMPTY_STR) : String(data);
+                                return (typeof data === 'undefined' || data === null) ? (item3["default"] || EMPTY_STR) : String(data);
                             }();
                             return item3.escape ? escapeHTML(ret) : ret;
                         }();
                         //return ['<div class="dataTable-cell">', wrapperText, '</div>'].join('')
                         return wrapperText;
                     }
-                    ,defaultContent: item3.default || EMPTY_STR
+                    ,defaultContent: item3["default"] || EMPTY_STR
                 };
                 var attr = {};
                 //下面改成class
@@ -540,7 +540,7 @@ define(['common', 'datatables.net-bs'], function(common){
                 var pageInfo = options.api.page.info();
                 that.pagination = $('.dataTables_paginate', options.api.table().container());
                 that.pagination
-                    .wrapInner($('<div>', {class: 'pagination'}))
+                    .wrapInner($('<div>', {'class': 'pagination'}))
                     .append(template.render(_pageJump, pageInfo));
                 var jumpNumberInput = $('.page_jump input', that.pagination);
                 if (pageInfo.pages > 0) {

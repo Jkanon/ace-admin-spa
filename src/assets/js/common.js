@@ -500,7 +500,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
         put: function (url, param, callBackFunc, async) {
             this.ajax(url, "put", param, callBackFunc, async)
         },
-        delete: function (url, param, callBackFunc, async) {
+        "delete": function (url, param, callBackFunc, async) {
             this.ajax(url, "delete", param, callBackFunc, async)
         },
         initZtree: function (elem, data, settings) {
