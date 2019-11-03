@@ -13,7 +13,7 @@ require.config({
         }
     },
     paths : {
-        "jquery": isLTIE8 ? "jquery-1.11.3.min" : "../components/jquery/dist/jquery",
+        "jquery": isLTIE8 ? "../components/components/jquery.1x/dist/jquery.min" : "../components/jquery/dist/jquery.min",
         "jquery-mobile": "jquery.mobile.custom.min",
         "jquery.spring-friendly": "jquery.spring-friendly.min",
         "bootstrap": "../components/bootstrap/dist/js/bootstrap.min",
@@ -21,7 +21,7 @@ require.config({
         "ace-elements": "ace-elements.min",
         "datatables.net": "../components/datatables.net/js/jquery.dataTables.min",
         "datatables.net-bs": "../components/datatables.net-bs/js/dataTables.bootstrap.min",
-        "datatables.treeGrid": "./dataTables.treeGrid",
+        "datatables.treeGrid": "dataTables.treeGrid",
         "layer": "../components/layer/dist/layer",
         "lodash": "../components/lodash/dist/lodash.min",
         //"jquery.maskedinput": "../components/jquery.maskedinput/dist/jquery.maskedinput.min"
