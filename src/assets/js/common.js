@@ -100,22 +100,26 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
         };
     }(jQuery));
     //工程配置项
-    var rcsConfig = window.rcsConfig = {};
-    rcsConfig["global"] = {
-        "servletUrl": "", //异步请求地址,本地工程可以不填
-        "response": { //响应结果配置
-            "statusName": "success", //数据状态的字段名称
-            "statusCode": true, //成功的状态码
-            "countName": "data.recordsTotal", //数据总数的字段名称
-            "msgName": "message", //消息名称
-            "dataName": "data" //数据列表的字段名称
-        }
-    };
+    if (!"appConfig" in window) {
+        window.appConfig = {
+            "global": {
+                "servletUrl": "", //异步请求地址,本地工程可以不填
+                "response": { //响应结果配置
+                    "statusName": "success", //数据状态的字段名称
+                    "statusCode": true, //成功的状态码
+                    "countName": "data.recordsTotal", //数据总数的字段名称
+                    "msgName": "message", //消息名称
+                    "dataName": "data" //数据列表的字段名称
+                }
+            }
+        };
+    }
+    var appConfig = window.appConfig;
     //公共函数==================================
-    var statusName = _.result(rcsConfig, "global.response.statusName", "code"),
-        statusCode = _.result(rcsConfig, "global.response.statusCode", 0),
-        msgName = _.result(rcsConfig, "global.response.msgName", "msg"),
-        dataName = _.result(rcsConfig, "global.response.dataName", "data.data");
+    var statusName = _.result(appConfig, "global.response.statusName", "code"),
+        statusCode = _.result(appConfig, "global.response.statusCode", 0),
+        msgName = _.result(appConfig, "global.response.msgName", "msg"),
+        dataName = _.result(appConfig, "global.response.dataName", "data.data");
 
     /**
      * 获取当前token
@@ -203,7 +207,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
             success: function (result) {
                 window.globalErrorCode = 0;
                 if (_.result(result, statusName) !== statusCode) {
-                    var filters = rcsConfig["filters"];
+                    var filters = appConfig["filters"];
                     if (!_.isEmpty(filters)) {
                         var otherFunction = filters[_.result(result, statusName)];
                         if (_.isFunction(otherFunction)) {
@@ -213,7 +217,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                     }
                     if (result[msgName]) {
                         //提示错误消息
-                        message.errorMsg(result[msgName]);
+                        message.error(result[msgName]);
                     }
                     return;
                 }
@@ -306,7 +310,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                 }
                 var editorElem = $('textarea[class*=codemirror]', this.form);
                 if (editorElem && editorElem.length > 0) {
-                    require(['codemirror'], function(CodeMirror){
+                    require(['codemirror'], function(){
                         $.each(editorElem, function(i, elem) {
                             doneFlag++;
                             var mode = $(elem).attr('data-mode');
@@ -460,7 +464,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
     };
 
     var exports = {
-        ApiContext: _.result(rcsConfig, "global.servletUrl"),
+        ApiContext: _.result(appConfig, "global.servletUrl"),
         modal: modal,
         popconfirm: function (options) {
             layer.tips(

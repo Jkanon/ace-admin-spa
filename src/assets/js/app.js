@@ -243,7 +243,7 @@ define(['ace-elements', 'common'], function(ACE, common){
         var stack = [];
         var c = $('.nav a[href="#!' + L + '"]');
         var a = c.parent();
-        if (a && a[0].className !== 'active') {
+        if (a.length && a[0].className !== 'active') {
             $('.nav li.active,.nav li.open').attr('class', '');
             stack.unshift({"name": $.trim(c.text()), "href": c.attr('href')});
             a[0].className = 'active';

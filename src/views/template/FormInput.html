@@ -1,14 +1,25 @@
 <!-- 单选框 -->
 <script id="tpl-radio4form" type="text/html">
-    <div>
-    {{each item.options it i}}
-    {{if i>0}} &nbsp; &nbsp; &nbsp;{{/if}}
-    <label class="inline">
-        <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}" {{if it.value===item.value||it.value===_().result(data, item.name)}}checked{{else if it.default && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}checked{{/if}}{{if item.required}} required{{/if}}/>
-        <span class="lbl middle">{{it.label}}</span>
-    </label>
-    {{/each}}
+    {{if item.buttonGroup}}
+    <div data-toggle="buttons" class="btn-group">
+        {{each item.options it i}}
+        <label class="btn btn-primary">
+            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}" {{if it.value===item.value||it.value===_().result(data, item.name)}}checked{{else if it.default && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}checked{{/if}}{{if item.required}} required{{/if}}/>
+            {{it.label}}
+        </label>
+        {{/each}}
     </div>
+    {{else}}
+    <div>
+        {{each item.options it i}}
+        {{if i>0}} &nbsp; &nbsp; &nbsp;{{/if}}
+        <label class="inline">
+            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}" {{if it.value===item.value||it.value===_().result(data, item.name)}}checked{{else if it.default && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}checked{{/if}}{{if item.required}} required{{/if}}/>
+            <span class="lbl middle">{{it.label}}</span>
+        </label>
+        {{/each}}
+    </div>
+    {{/if}}
 </script>
 <!-- 多选框 -->
 <script id="tpl-checkbox4form" type="text/html">
@@ -71,7 +82,7 @@
             <% } %>
             {{else}}
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right {{if item.type === 'radio' || item.type === 'checkbox' || item.type === 'switch'}}no-padding-top{{/if}}" for="txt{{item.name}}">{{item.label}}</label>
+                <label class="col-sm-3 control-label no-padding-right {{if (item.type === 'radio' || item.type === 'checkbox' || item.type === 'switch') && !item.buttonGroup}}no-padding-top{{/if}}" for="txt{{item.name}}">{{item.label}}</label>
                 <div class="col-sm-9 col-xs-12">
                     <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
                 </div>

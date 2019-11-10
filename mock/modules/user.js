@@ -104,7 +104,7 @@ module.exports = [
 {
     url: '/sys/users',
     type: 'get',
-    response: config => {
+    response: function(config) {
         return {
             "success": true,
             "message": "操作成功！",
@@ -122,7 +122,7 @@ module.exports = [
 {
     url: '/login',
     type: 'post',
-    response: config => {
+    response: function(config) {
         return {
             "success":true,
             "message":"登录成功",

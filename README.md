@@ -85,7 +85,7 @@ $ gulp build  // 然后直接把dist中的目标文件丢到生产环境中去
     message: string // 错误提示
 }
 ```
-- 可以根据需要适配接口格式。请修改`common.js`中的`rcsConfig["global"].response`字段，支持嵌套格式。同时需要单独修改`login.js`文件。
+- 可以根据需要适配接口格式。请修改`common.js`中的`appConfig["global"].response`字段，支持嵌套格式。同时需要单独修改`login.js`文件。
 
 ### 数据mock
 - mock数据文件放在[mock/modules](mock/modules)下
