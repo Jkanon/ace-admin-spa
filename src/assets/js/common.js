@@ -100,7 +100,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
         };
     }(jQuery));
     //工程配置项
-    if (!"appConfig" in window) {
+    if (!("appConfig" in window)) {
         window.appConfig = {
             "global": {
                 "servletUrl": "", //异步请求地址,本地工程可以不填
