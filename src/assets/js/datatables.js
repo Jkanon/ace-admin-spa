@@ -119,7 +119,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
     ,TPL_TOOLBAR = [
             '<div class="hidden-sm hidden-xs action-buttons">',
             '{{each list item index}}',
-            '<a href="javascript:;" class="{{item.color}}{{if item.tooltip}} {{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{item.tooltip.title}}"{{else}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{item.pop.title}}"{{/if}}>',
+            '<a href="javascript:;" class="{{item.color}}{{if item.tooltip}} {{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{typeof item.tooltip.title === \'function\' ? item.tooltip.title(full): item.tooltip.title}}"{{else}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}>',
             '<i class="ace-icon fa fa-{{item.icon}} bigger-130"></i>',
             '</a>',
             '{{/each}}',
@@ -133,7 +133,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
             '<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">',
             '{{each list item index}}',
             '<li>',
-            '<a href="javascript:;" {{if item.tooltip}}class="{{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{item.tooltip.title}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{item.pop.title}}"{{/if}}>',
+            '<a href="javascript:;" {{if item.tooltip}}class="{{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{typeof item.tooltip.title === \'function\' ? item.tooltip.title(full): item.tooltip.title}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}>',
             '<span class="{{item.color}}">',
             '<i class="ace-icon fa fa-{{item.icon}} bigger-120"></i>',
             '</span>',
@@ -462,7 +462,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                                         }
                                     }
 
-                                    return template.render(TPL_TOOLBAR, {list: list});
+                                    return template.render(TPL_TOOLBAR, {list: list, full: full});
                                 }
                                 return template.render(($(item3.toolbar).html()||EMPTY_STR), full);
                             }
