@@ -1,8 +1,8 @@
 /**
  * jquery.dataTables的封装
- * @author weihq@mgskj.com
+ * @author im.Jkanon@gmail.com
  */
-define(['common', 'datatables.net-bs'], function(common){
+define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
     "use strict";
 
     jQuery.fn.dataTableExt.oApi.fnProcessingIndicator = function ( oSettings, onoff )
@@ -431,6 +431,8 @@ define(['common', 'datatables.net-bs'], function(common){
                             if (item3.render) {
                                 if (typeof item3.render === "function") {
                                     return item3.render(data, type, full, meta);
+                                } else if (typeof item3.render === "object") {
+                                    return _.result(item3.render, data);
                                 }
                                 return item3.render;
                             }
