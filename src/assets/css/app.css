@@ -453,6 +453,27 @@
     margin-left: 0;
 }
 
+.ace-form-item-required::before {
+    display: inline-block;
+    margin-right: 4px;
+    color: #f5222d;
+    font-size: 14px;
+    font-family: SimSun,sans-serif;
+    line-height: 1;
+    content: '*';
+}
+
+.form-horizontal .control-label>span::after {
+    content: ':';
+    position: relative;
+    top: -0.5px;
+    margin: 0 0 0 2px;
+}
+
+.form-horizontal .control-label>span.ace-form-item-no-colon::after {
+    content: ' ';
+}
+
 /* switch样式 */
 /*正常/冻结*/
 input[type=checkbox].ace.ace-switch.ace-switch-10 + .lbl::before {

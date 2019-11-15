@@ -74,7 +74,7 @@
     <div style="margin-top:15px;">
         <form class="form-horizontal" role="form">
             {{each list item i}}
-            <div id="{{item.name}}FormGroup" class="{{if item.hidden}} hidden{{/if}}">
+            <div id="formGroup-{{item.name}}" class="{{if item.hidden}} hidden{{/if}}">
             {{if i>0}}<div class="space-2"></div>{{/if}}
             {{if item.type==='hidden'}}
             <% if(!item.hiddenWhenNotExist || (typeof(item.value) === 'undefined' && _().result(data, item.name) || item.value)) { %>
@@ -82,7 +82,9 @@
             <% } %>
             {{else}}
             <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right {{if (item.type === 'radio' || item.type === 'checkbox' || item.type === 'switch') && !item.buttonGroup}}no-padding-top{{/if}}" for="txt{{item.name}}">{{item.label}}</label>
+                <label class="col-sm-3 control-label no-padding-right {{if (item.type === 'radio' || item.type === 'checkbox' || item.type === 'switch') && !item.buttonGroup}}no-padding-top{{/if}}" for="txt{{item.name}}">
+                    <span class="{{if item.required && hideRequiredMark !== true}}ace-form-item-required{{/if}}{{if colon === false || item.colon === false}} ace-form-item-no-colon{{/if}}">{{item.label}}</span>
+                </label>
                 <div class="col-sm-9 col-xs-12">
                     <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
                 </div>

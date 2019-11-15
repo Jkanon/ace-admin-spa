@@ -123,7 +123,8 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                                 label: '账号',
                                 name: 'username',
                                 placeholder: '请输入用户名',
-                                required: true
+                                required: true,
+                                colon: false
                             }, {
                                 type: 'radio',
                                 label: '性别',
@@ -155,7 +156,9 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                                 placeholder: '邮箱地址',
                                 className: 'email'
                             }],
-                        data: data || {}
+                        data: data || {},
+                        hideRequiredMark: false,
+                        colon: true
                     }
                 }
                 , api: this.API
