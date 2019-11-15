@@ -4,7 +4,7 @@
     <div data-toggle="buttons" class="btn-group">
         {{each item.options it i}}
         <label class="btn btn-primary">
-            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}" {{if it.value===item.value||it.value===_().result(data, item.name)}}checked{{else if it.default && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}checked{{/if}}{{if item.required}} required{{/if}}/>
+            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}"{{if it.value===item.value||it.value===_().result(data, item.name)}} checked{{else if it['default'] && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}} checked{{/if}}{{if item.required}} required{{/if}}/>
             {{it.label}}
         </label>
         {{/each}}
@@ -14,7 +14,7 @@
         {{each item.options it i}}
         {{if i>0}} &nbsp; &nbsp; &nbsp;{{/if}}
         <label class="inline">
-            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}" {{if it.value===item.value||it.value===_().result(data, item.name)}}checked{{else if it.default && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}checked{{/if}}{{if item.required}} required{{/if}}/>
+            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}"{{if it.value===item.value||it.value===_().result(data, item.name)}} checked{{else if it['default'] && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}} checked{{/if}}{{if item.required}} required{{/if}}/>
             <span class="lbl middle">{{it.label}}</span>
         </label>
         {{/each}}
@@ -28,13 +28,13 @@
 <!-- switch开关 -->
 <script id="tpl-switch4form" type="text/html">
     <label class="inline">
-        <input type="checkbox" name="{{item.name}}" id="txt{{item.name}}" class="ace ace-switch {{if item.switchtype}}ace-switch-{{item.switchtype}}{{/if}} {{if item.color}}{{item.color}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.checkedValue===item.value||item.checkedValue===_().result(data, item.name)}}checked{{else if (item.default === true || item.default === 'checked') && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}checked{{/if}}{{if item.required}} required{{/if}}>
+        <input type="checkbox" name="{{item.name}}" id="txt{{item.name}}" class="ace ace-switch {{if item.switchtype}}ace-switch-{{item.switchtype}}{{/if}} {{if item.color}}{{item.color}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.checkedValue===item.value||item.checkedValue===_().result(data, item.name)}}checked{{else if (item['default'] === true || item['default'] === 'checked') && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}checked{{/if}}{{if item.required}} required{{/if}}>
         <span class="lbl middle"></span>
     </label>
 </script>
 <!-- number -->
 <script id="tpl-number4form" type="text/html">
-    <input type="text" id="txt{{item.name}}" name="{{item.name}}" class="js-spinner{{if item.className}} {{item.className}}{{/if}}"{{if item.min}} min="{{item.min}}"{{/if}}{{if item.max}} max="{{item.max}}"{{/if}}{{if item.step}} max="{{item.step}}"{{/if}}{{if defaults(item.value, _().result(data, item.name), item.default)}}value="{{defaults(item.value, _().result(data, item.name), item.default)}}"{{/if}}{{if item.required}} required{{/if}}/>
+    <input type="text" id="txt{{item.name}}" name="{{item.name}}" class="js-spinner{{if item.className}} {{item.className}}{{/if}}"{{if item.min}} min="{{item.min}}"{{/if}}{{if item.max}} max="{{item.max}}"{{/if}}{{if item.step}} max="{{item.step}}"{{/if}}{{if defaults(item.value, _().result(data, item.name), item['default'])}}value="{{defaults(item.value, _().result(data, item.name), item['default'])}}"{{/if}}{{if item.required}} required{{/if}}/>
 </script>
 <!-- 普通输入框 -->
 <script id="tpl-input4form" type="text/html">
@@ -54,7 +54,7 @@
 <!-- 文本域 -->
 <script id="tpl-textarea4form" type="text/html">
     <div class="clearfix">
-    <textarea class="form-control{{if item.maxLength}} limited{{/if}}{{if item.autosize}} autosize{{/if}}{{if item.className}} {{item.className}}{{/if}}" id="txt{{item.name}}" name="{{item.name}}" {{if item.maxLength}}maxlength="{{item.maxLength}}"{{/if}} placeholder="{{item.placeholder}}"{{if item.required}} required{{/if}}{{if item.props}} {{item.props}} {{/if}}>{{defaults(item.value, _().result(data, item.name), item.default)}}</textarea>
+    <textarea class="form-control{{if item.maxLength}} limited{{/if}}{{if item.autosize}} autosize{{/if}}{{if item.className}} {{item.className}}{{/if}}" id="txt{{item.name}}" name="{{item.name}}" {{if item.maxLength}}maxlength="{{item.maxLength}}"{{/if}} placeholder="{{item.placeholder}}"{{if item.required}} required{{/if}}{{if item.props}} {{item.props}} {{/if}}>{{defaults(item.value, _().result(data, item.name), item['default'])}}</textarea>
     </div>
 </script>
 <!-- 下拉框 -->
@@ -63,7 +63,7 @@
         <select class="input-medium{{if item.className}} {{item.className}}{{/if}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}>
             {{if item.hasEmpty}}<option value="">{{if item.emptyText}}{{item.emptyText}}{{else}}------------------{{/if}}</option>{{/if}}
             {{each item.options it i}}
-            <option value="{{typeof it.value === 'undefined' && it.label || it.value}}"{{if it.value===item.value||it.value===_().result(data, item.name)}}selected{{else if it.default && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}selected{{/if}}>{{it.label}}</option>
+            <option value="{{typeof it.value === 'undefined' && it.label || it.value}}"{{if it.value===item.value||it.value===_().result(data, item.name)}}selected{{else if it['default'] && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}selected{{/if}}>{{it.label}}</option>
             {{/each}}
         </select>
     </div>
