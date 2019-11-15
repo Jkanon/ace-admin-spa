@@ -279,24 +279,6 @@
     float: none;
 }
 
-.dataTables_paginate .page_jump {
-    display: inline-block;
-    float: right;
-}
-
-.dataTables_paginate .page_jump input {
-    width: 50px;
-}
-
-.dataTables_paginate .page_jump .paginate_button {
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-.dataTables_paginate .page_jump .paginate_button.disabled {
-    cursor: not-allowed;
-}
-
 /* datatables默认垂直居中 */
 .table > tbody > tr > td,
 .table > tbody > tr > th,
@@ -530,14 +512,20 @@ input[type=checkbox].ace.ace-switch.green:checked + .lbl::before {
     margin: -2px 0 0 -2px;
 }
 
-.ztree li span.button.root_open:first-child:before,
+.ztree li span.button.switch.noline_docu:first-child {
+    border: none;
+}
+
 .ztree li span.button.root_close:first-child:before,
 .ztree li span.button.roots_close:first-child:before,
 .ztree li span.button.center_close:first-child:before,
 .ztree li span.button.bottom_close:first-child:before,
+.ztree li span.button.noline_close:first-child:before,
+.ztree li span.button.root_open:first-child:before,
 .ztree li span.button.roots_open:first-child:before,
 .ztree li span.button.center_open:first-child:before,
-.ztree li span.button.bottom_open:first-child:before {
+.ztree li span.button.bottom_open:first-child:before,
+.ztree li span.button.noline_open:first-child:before {
     content: "";
     display: block;
     width: 7px;
@@ -551,7 +539,8 @@ input[type=checkbox].ace.ace-switch.green:checked + .lbl::before {
 .ztree li span.button.root_close:first-child:after,
 .ztree li span.button.roots_close:first-child:after,
 .ztree li span.button.center_close:first-child:after,
-.ztree li span.button.bottom_close:first-child:after {
+.ztree li span.button.bottom_close:first-child:after,
+.ztree li span.button.noline_close:first-child:after {
     content: "";
     display: block;
     height: 7px;
@@ -632,9 +621,9 @@ input[type=checkbox].ace.ace-switch.green:checked + .lbl::before {
 .ztree li span.button.chk.radio_true_part,
 .ztree li span.button.chk.radio_true_part_focus,
 .ztree li span.button.chk.checkbox_false_part,
-.ztree li span.button.chk.checkbox__false_part_focus,
-.ztree li span.button.chk.checkbox__true_part,
-.ztree li span.button.chk.checkbox__true_part_focus {
+.ztree li span.button.chk.checkbox_false_part_focus,
+.ztree li span.button.chk.checkbox_true_part,
+.ztree li span.button.chk.checkbox_true_part_focus {
     background-color: #A7A7A7;
     border-color: #A7A7A7;
     color: #FFF;
