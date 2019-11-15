@@ -141,9 +141,9 @@ define(['ace-elements', 'common'], function(ACE, common){
                     });
                 }
             } else if (xhr.status == 404) {
-                $('#page-content').html(template('tpl404'));
+                $('#page-content').html(template('tpl404', {}));
             } else if (xhr.status == 500) {
-                $('#page-content').html(template('tpl500'));
+                $('#page-content').html(template('tpl500', {}));
             }
         });
     }
