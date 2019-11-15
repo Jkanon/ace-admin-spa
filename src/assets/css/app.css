@@ -279,6 +279,24 @@
     float: none;
 }
 
+.dataTables_paginate .page_jump {
+    display: inline-block;
+    float: right;
+}
+
+.dataTables_paginate .page_jump input {
+    width: 50px;
+}
+
+.dataTables_paginate .page_jump .paginate_button {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.dataTables_paginate .page_jump .paginate_button.disabled {
+    cursor: not-allowed;
+}
+
 /* datatables默认垂直居中 */
 .table > tbody > tr > td,
 .table > tbody > tr > th,

@@ -22,7 +22,7 @@ const userList = [
         "id":"1179675874431131649",
         "email":null,
         "username":"qinfeng",
-        "status":1
+        "status":0
     },
     {
         "birthday":"2019-04-01",
@@ -47,7 +47,7 @@ const userList = [
         "id":"f0019fdebedb443c98dcb17d88222c38",
         "email":"",
         "username":"zhagnxiao",
-        "status":1
+        "status":0
     },
     {
         "birthday":"2018-12-05",
@@ -72,7 +72,7 @@ const userList = [
         "id":"e9ca23d68d884d4ebb19d07889727dae",
         "email":"11@qq.com",
         "username":"admin",
-        "status":1
+        "status":0
     },
     {
         "birthday":null,
