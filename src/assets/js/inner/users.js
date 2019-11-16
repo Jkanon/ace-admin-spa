@@ -113,7 +113,7 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                 , type: type
                 , template: {
                     data: {
-                        list: [
+                        items: [
                             {
                                 type: 'hidden',
                                 name: 'id',

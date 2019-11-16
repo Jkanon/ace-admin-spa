@@ -713,24 +713,21 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
             ,api = options.elem.api()
             , thisTable = api.table().node()
         ;
-
         $(thisTable)
             //复选框选择
-            .on('click', 'input[name="table-checkbox"]+', function(e){
+            .on('click', ace.vars['old_ie'] ? 'input[name="table-checkbox"]' : 'input[name="table-checkbox"]+', function(e){
                 var $table = $(this).closest('table');
                 if(!$table.is(thisTable))
                     return;
-                var checkbox = $(this).prev()
+                var checkbox = this.tagName === "INPUT" ? $(this) : $(this).prev()
                     ,childs = that.layBody.find('input[name="table-checkbox"]')
                     ,tr = checkbox.parents('tr')
                     ,index = api.row(tr).index()
-                    ,checked = !checkbox[0].checked
+                    ,checked = ace.vars['old_ie'] ? checkbox[0].checked : !checkbox[0].checked
                     ,isAll = checkbox.attr('filter') === 'table-allChoose';
-
                 //全选
                 if(isAll){
                     childs.each(function(i, item){
-
                         if(item.checked !== checked) {
                             $(item).closest('tr').toggleClass('selected');
                             item.checked = checked;
@@ -738,8 +735,10 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                         that.setCheckData(i, checked);
                     });
                     that.syncCheckAll();
-                    //在syncCheckAll中会进行选中，此时阻止默认点击选中事件
-                    e.preventDefault();
+                    if (!ace.vars['old_ie']) {
+                        //在syncCheckAll中会进行选中，此时阻止默认点击选中事件
+                        e.preventDefault();
+                    }
                 } else {
                     tr.toggleClass('selected');
                     that.setCheckData(index, checked);
@@ -753,7 +752,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                 //e.preventDefault();
             })
             //工具条操作事件
-            .on('click', '*[ace-event]', function(){
+            .on(ace.click_event, '*[ace-event]', function(){
                 var $table = $(this).closest('table');
                 if(!$table.is(thisTable))
                     return;
@@ -812,7 +811,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                 tr.addClass(ELEM_CLICK).siblings('tr').removeClass(ELEM_CLICK);
             })
             //折叠展开
-            .on('click', '.show-details-btn', function () {
+            .on(ace.click_event, '.show-details-btn', function () {
                 var $this = $(this);
                 var $table = $this.closest('table');
                 if(!$table.is(thisTable))

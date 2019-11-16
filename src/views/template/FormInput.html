@@ -73,7 +73,7 @@
 <script id="tpl-formInput" type="text/html">
     <div style="margin-top:15px;">
         <form class="form-horizontal" role="form">
-            {{each list item i}}
+            {{each items item i}}
             <div id="formGroup-{{item.name}}" class="{{if item.hidden}} hidden{{/if}}">
             {{if i>0}}<div class="space-2"></div>{{/if}}
             {{if item.type==='hidden'}}
