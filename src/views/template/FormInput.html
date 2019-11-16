@@ -97,12 +97,21 @@
             <% } %>
             {{else}}
             <div class="form-group">
+                {{if layout === "vertical"}}
+                <div class="plrw">
+                    <label for="txt{{item.name}}">
+                        {{item.label}}
+                    </label>
+                    <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
+                </div>
+                {{else}}
                 <label class="col-sm-3 control-label no-padding-right {{if (item.type === 'radio' || item.type === 'checkbox' || item.type === 'switch') && !item.buttonGroup}}no-padding-top{{/if}}" for="txt{{item.name}}">
                     <span class="{{if item.required && hideRequiredMark !== true}}ace-form-item-required{{/if}}{{if colon === false || item.colon === false}} ace-form-item-no-colon{{/if}}">{{item.label}}</span>
                 </label>
                 <div class="col-sm-9 col-xs-12">
                     <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
                 </div>
+                {{/if}}
             </div>
             {{/if}}
             </div>
