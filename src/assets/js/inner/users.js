@@ -140,19 +140,19 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                                 placeholder: '请输入用户姓名',
                                 required: true
                             }, {
-                                type: 'inputWithIcon',
+                                type: 'input',
                                 label: '手机',
                                 name: 'phone',
-                                icon: 'phone',
+                                suffix: 'fa fa-phone fa-flip-horizontal',
                                 size: 'medium',
                                 inputMask: "'mask': '999 9999 9999'",
                                 placeholder: '手机号码',
                                 className: 'mobileZH'
                             }, {
-                                type: 'inputWithIcon',
+                                type: 'input',
                                 label: '邮箱',
                                 name: 'email',
-                                icon: 'envelope',
+                                addonBefore: 'fa fa-envelope',
                                 placeholder: '邮箱地址',
                                 className: 'email'
                             }],

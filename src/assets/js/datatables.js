@@ -582,7 +582,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                     jumpNumberInput.attr('disabled', true);
                     $('.page_jump .paginate_button', that.pagination).addClass('disabled');
                 }
-
+                that.syncCheckAll();
                 //$(this).closest('.layui-form').attr('lay-filter', 'LAY-table-'+that.index);
                 var tooltips = $('[data-rel=tooltip]', options.elem);
                 tooltips && tooltips.tooltip();

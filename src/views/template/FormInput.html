@@ -36,19 +36,34 @@
 <script id="tpl-number4form" type="text/html">
     <input type="text" id="txt{{item.name}}" name="{{item.name}}" class="js-spinner{{if item.className}} {{item.className}}{{/if}}"{{if item.min}} min="{{item.min}}"{{/if}}{{if item.max}} max="{{item.max}}"{{/if}}{{if item.step}} max="{{item.step}}"{{/if}}{{if defaults(item.value, _().result(data, item.name), item['default'])}}value="{{defaults(item.value, _().result(data, item.name), item['default'])}}"{{/if}}{{if item.required}} required{{/if}}/>
 </script>
-<!-- 普通输入框 -->
+
 <script id="tpl-input4form" type="text/html">
     <div class="clearfix">
+        {{if item.suffix || item.prefix}}
+        <!-- 带图标输入框 -->
+        <span class="input-icon {{if item.suffix}}input-icon-right{{/if}}">
+            {{if item.prefix}}<i class="ace-icon {{item.prefix}}"></i>{{/if}}
+            <input class="{{if item.size}}input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}"  value="{{defaults(item.value, _().result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}>
+            {{if item.suffix}}<i class="ace-icon {{item.suffix}}"></i>{{/if}}
+        </span>
+        {{else if item.addonBefore || item.addonAfter}}
+            <div class="input-group">
+                {{if item.addonBefore}}
+                <span class="input-group-addon">
+                    <i class="ace-icon {{item.addonBefore}}"></i>
+                </span>
+                {{/if}}
+                <input class="{{if item.size}}input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}"  value="{{defaults(item.value, _().result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}>
+                {{if item.addonAfter}}
+                <span class="input-group-addon">
+                    <i class="ace-icon {{item.addonAfter}}"></i>
+                </span>
+                {{/if}}
+            </div>
+        {{else}}
+        <!-- 普通输入框 -->
         <input type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}" {{if item.maxlength}}maxlength="{{item.maxlength}}"{{/if}} class="col-xs-10 col-sm-8{{if item.size}} input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}} value="{{defaults(item.value, _().result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}/>
-    </div>
-</script>
-<!-- 带图标输入框 -->
-<script id="tpl-inputWithIcon4form" type="text/html">
-    <div class="clearfix">
-    <span class="input-icon input-icon-right">
-        <input class="{{if item.size}}input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="text" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}"  value="{{defaults(item.value, _().result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}>
-        <i class="ace-icon fa fa-{{item.icon}} {{if item.icon==='phone'}}fa-flip-horizontal{{/if}}"></i>
-    </span>
+        {{/if}}
     </div>
 </script>
 <!-- 文本域 -->
