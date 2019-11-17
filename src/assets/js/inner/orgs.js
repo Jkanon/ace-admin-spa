@@ -20,7 +20,7 @@ define(["datatables", "common", "app"], function (datatable, common, APP) {
         },
         initForm: function(data) {
             var templet = {
-                list: [
+                items: [
                     {
                         type: "hidden",
                         name: "id",

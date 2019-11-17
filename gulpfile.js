@@ -1,14 +1,21 @@
-var path = require('path');
-var fs = require('fs');
-var del = require('del');
-var runSequence = require('run-sequence');
+const path = require('path');
+const fs = require('fs');
+const del = require('del');
+const runSequence = require('run-sequence');
 
-var gulp = require('gulp');
-var replace = require('gulp-replace');
-var fileinclude = require('gulp-file-include');
-var pkg = require('./package.json');
+const gulp = require('gulp');
+const replace = require('gulp-replace');
+const fileinclude = require('gulp-file-include');
+//const browserify = require("gulp-browserify");
+const babelify = require("babelify");
+const bro = require("gulp-bro");
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const inject = require('gulp-inject');
 
-var config = {
+const pkg = require('./package.json');
+
+const config = {
     src: {
         html: ['./src/**/*.html', '!./src/views/template/**'],
     },
@@ -55,6 +62,32 @@ gulp.task('build', function(cb) {
         'copy',
         'build:html',
         cb);
+});
+
+gulp.task('browserify', function(){
+    gulp.src(['mock/index.js'])
+        .pipe(bro({
+            transform: [
+                babelify.configure({ presets: ['@babel/env'] }),
+                'require-globify'
+            ]
+        }))
+        .pipe(uglify())
+        .pipe(rename('mock.min.js'))
+        .pipe(gulp.dest(config.dist + "/assets/js"))
+});
+
+gulp.task('inject-mock', function(){
+    const target = gulp.src([config.dist + "/index.html", config.dist + "/login.html"]);
+    // It's not necessary to read the files (will speed up things), we're only after their paths:
+    const sources = gulp.src([config.dist + "/assets/js/mock.min.js"], {read: false});
+
+    return target.pipe(inject(sources, {relative: true}))
+        .pipe(gulp.dest(config.dist));
+});
+
+gulp.task('build:mock', function(cb) {
+    runSequence('build:clean', 'copy', 'browserify', 'build:html', 'inject-mock',  cb);
 });
 
 gulp.task('default', ['build']);

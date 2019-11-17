@@ -5,60 +5,34 @@ function param2Obj(url) {
     if (!search) {
         return {};
     }
-    return JSON.parse(
-        '{"' +
-        decodeURIComponent(search)
-            .replace(/"/g, '\\"')
-            .replace(/&/g, '","')
-            .replace(/=/g, '":"')
-            .replace(/\+/g, ' ') +
-        '"}'
-    );
-}
-
-const fs = require('fs');
-const path = require('path');
-
-if (typeof require.context === 'undefined') {
-    require.context = (base = '.', scanSubDirectories = false, regularExpression = /\.js$/) => {
-        const files = {};
-
-        function readDirectory(directory) {
-            fs.readdirSync(directory).forEach((file) => {
-                const fullPath = path.resolve(directory, file);
-
-                if (fs.statSync(fullPath).isDirectory()) {
-                    if (scanSubDirectories) readDirectory(fullPath);
-
-                    return;
-                }
-
-                if (!regularExpression.test(fullPath)) return;
-
-                files[fullPath] = true;
-            });
-        }
-
-        readDirectory(path.resolve(__dirname, base));
-
-        function Module(file) {
-            return require(file);
-        }
-
-        Module.keys = () => Object.keys(files);
-
-        return Module;
-    };
+    try {
+        return JSON.parse(
+            '{"' +
+            decodeURIComponent(search)
+                .replace(/"/g, '\\"')
+                .replace(/&/g, '","')
+                .replace(/=/g, '":"')
+                .replace(/\+/g, ' ') +
+            '"}'
+        );
+    } catch (e) {
+        // TODO Datatables参数解析会出错
+        return {};
+    }
 }
 
 let mocks = [];
-const modulesFiles = require.context('./modules', true, /\.js$/);
-modulesFiles.keys().reduce((modules, modulePath) => {
-    const value = modulesFiles(modulePath);
-    if (value) {
-        mocks = mocks.concat(value);
+if (typeof window === 'undefined') {
+    const normalizedPath = require("path").join(__dirname, "./modules/");
+    require("fs").readdirSync(normalizedPath).forEach(function(file) {
+        mocks = mocks.concat(require("./modules/" + file));
+    });
+} else {
+    const mocksMap = require('./modules/*.js', {mode: 'hash'});
+    for (const x in mocksMap) {
+        mocks = mocks.concat(mocksMap[x]);
     }
-}, {});
+}
 
 // for front mock
 // please use it cautiously, it will redefine XMLHttpRequest,
@@ -99,6 +73,9 @@ function mockXHR() {
     for (const i of mocks) {
         Mock.mock(new RegExp(i.url), i.type || 'get', XHR2ExpressReqWrap(i.response));
     }
+}
+if (typeof window !== 'undefined') {
+    mockXHR();
 }
 
 // for mock server

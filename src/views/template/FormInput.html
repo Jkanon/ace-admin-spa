@@ -87,7 +87,7 @@
 <!-- 表单模版 -->
 <script id="tpl-formInput" type="text/html">
     <div style="margin-top:15px;">
-        <form class="form-horizontal" role="form">
+        <form class="form-{{layout||'horizontal'}}" role="form">
             {{each items item i}}
             <div id="formGroup-{{item.name}}" class="{{if item.hidden}} hidden{{/if}}">
             {{if i>0}}<div class="space-2"></div>{{/if}}
@@ -99,8 +99,8 @@
             <div class="form-group">
                 {{if layout === "vertical"}}
                 <div class="plrw">
-                    <label for="txt{{item.name}}">
-                        {{item.label}}
+                    <label for="txt{{item.name}}" class="control-label">
+                        <span class="{{if item.required && hideRequiredMark !== true}}ace-form-item-required{{/if}}">{{item.label}}</span>
                     </label>
                     <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
                 </div>
