@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<style>
+#nav{padding:.5em;}
+#nav a{line-height:2em;padding:0 .5em;background:#EEE;
+	display:inline-block;vertical-align:top;}	
+</style>
+
+<div id="nav">
+	<a href="#!home">首页</a>
+	<a href="#!home/str1/123">首页带参数</a>
+	<a href="#!null">URL不存在</a>
+	<a href="#!member">member</a>
+	<a href="#!before123end">before123end</a>
+	<a href="#!before5676end">before5676end</a>
+</div>
+
+<button id="获取当前页面地址">获取当前页面地址</button>
+
+<form id="跳转表单">
+	<input name="url">
+	<button type="submit">go!</button>
+</form>
+
+<pre id="M"></pre>
+
+<script src="../q.js"></script>
+<script>
+
+/* 注册 home URL 在回调里期待接收两个参数 */
+Q.reg('home',function(str1,str2){
+	M.innerHTML+='\n';
+	M.innerHTML+='\n打开了home页';
+
+	if(str1)
+		M.innerHTML+='\n参数一是'+str1;
+
+	if(str2)
+		M.innerHTML+='\n参数二是'+str2;
+});
+
+
+/* 注册 member URL 无期待参数*/
+Q.reg('member',function(){
+	M.innerHTML+='\n';
+	M.innerHTML+='\n用户页';
+})
+
+
+/* 通过正则表达式注册 URL */
+Q.reg(/^before(\d+)end$/,function(num){
+	M.innerHTML+='\n';
+	M.innerHTML+='\n现在是通过正则注册的URL，里面的参数是：'+num;
+})
+
+/* 启动函数 */
+Q.init({
+	key:'!',/* url里#和url名之间的分割符号 默认为感叹号 */
+	index:'home',/* 首页地址 如果访问到不能访问页面也会跳回此页 */
+	pop:function(L,arg){/* 每次有url变更时都会触发pop回调 */
+		console.log('pop 当前参数是:',arguments);
+	}
+});
+
+
+
+
+获取当前页面地址.onclick=function(){
+	M.innerHTML+='\n';
+	M.innerHTML+='\n当前页面地址: '+Q.lash;
+};
+跳转表单.onsubmit=function(e){
+	e.preventDefault();
+
+	if(!this.url.value)
+		return this.url.focus();
+	
+	Q.go(this.url.value);
+};
+</script>

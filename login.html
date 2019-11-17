@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta charset="utf-8"/>
+    <title>登录页面 - 单页面后台管理系统</title>
+
+    <meta name="description" content="User login page"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- inject:js -->
+    <script src="assets/js/mock.min.js"></script>
+    <!-- endinject -->
+    <!-- ace settings handler -->
+    <script src="assets/js/ace-extra.min.js"></script>
+    <script type="text/javascript">
+        //检查是否登录
+        (function (){
+            var strUser = ace.data.get("user");
+            if(strUser) {
+                var tempUser = JSON.parse(strUser);
+                if (tempUser != null) {
+                    location.replace("index.html");
+                }
+            }
+        })()
+    </script>
+
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" href="assets/components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="assets/components/font-awesome/css/font-awesome.min.css"/>
+
+    <!-- text fonts -->
+    <link rel="stylesheet" href="assets/css/ace-fonts.min.css"/>
+
+    <!-- ace styles -->
+    <link rel="stylesheet" href="assets/css/ace.min.css"/>
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="assets/css/ace-part2.min.css"/>
+    <![endif]-->
+    <link rel="stylesheet" href="assets/css/ace-rtl.min.css"/>
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="assets/css/ace-ie.min.css"/>
+    <![endif]-->
+
+    <link rel="stylesheet" href="assets/components/layer/dist/theme/default/layer.css"/>
+    <link rel="stylesheet" href="assets/css/cloud.css"/>
+    <link rel="stylesheet" href="assets/css/app.css"/>
+
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+    <!--[if lte IE 8]>
+    <script src="assets/components/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="assets/components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="login-layout cloud-login">
+<div class="cloud-body">
+    <div class="cloud"></div>
+    <div class="cloud2"></div>
+</div>
+
+<div class="main-container cloud-background">
+    <div class="main-content">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div class="login-container">
+                    <div class="center">
+                        <h1>
+                            <i class="ace-icon fa fa-cogs green"></i>
+                            <span class="light-grey" id="id-title">单页面后台管理系统</span>
+                        </h1>
+                        <h4 class="white" id="id-company-text">&copy; ,</h4>
+                    </div>
+
+                    <div class="space-6"></div>
+
+                    <div class="position-relative">
+                        <div id="login-box" class="login-box visible widget-box no-border">
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <h4 class="header blue lighter bigger">
+                                        <i class="ace-icon fa fa-coffee green"></i>
+                                        用户登录
+                                    </h4>
+
+                                    <div class="space-6"></div>
+
+                                    <form id="loginForm">
+                                        <fieldset>
+                                            <label class="block clearfix">
+                                                <span class="block input-icon input-icon-right">
+                                                    <input id="account" type="text" class="form-control"
+                                                           placeholder="请输入用户名" data-memo="用户名" required/>
+                                                    <i class="ace-icon fa fa-user"></i>
+                                                </span>
+                                            </label>
+
+                                            <label class="block clearfix">
+                                                <span class="block input-icon input-icon-right">
+                                                    <input id="password" type="password" class="form-control"
+                                                           placeholder="请输入密码" data-memo="密码" required/>
+                                                    <i class="ace-icon fa fa-lock"></i>
+                                                </span>
+                                            </label>
+
+                                            <!--<label class="block clearfix">
+                                                <div class="input-group">
+                                                    <input type="text" style="width:150px" class="form-control"
+                                                           placeholder="请输入验证码" id="randCode">
+                                                    <span class="input-group-addon" title="点击刷新" style="padding: 0;border-left: 1px solid #ccc;">
+                                                        <img id="randCodeImage" src="" alt="验证码"></span>
+                                                </div>
+                                            </label>-->
+
+                                            <div class="space"></div>
+
+                                            <div class="clearfix">
+                                                <label class="inline">
+                                                    <input type="checkbox" class="ace" checked/>
+                                                    <span class="lbl"> 记住用户名</span>
+                                                </label>
+
+                                                <button id="loginSubmit" type="button" class="width-35 pull-right btn btn-sm btn-primary">
+                                                    <i class="ace-icon fa fa-key"></i>
+                                                    <span class="bigger-110">登录</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="space-4"></div>
+                                        </fieldset>
+                                    </form>
+                                </div><!-- /.widget-main -->
+
+                            </div><!-- /.widget-body -->
+                        </div><!-- /.login-box -->
+                    </div><!-- /.position-relative -->
+
+                    <div class="navbar-fixed-top align-right" id="nav-theme">
+                        <br/>
+                        &nbsp;
+                        <a id="btn-login-cloud" href="#" class="white">Cloud</a>
+                        &nbsp;
+                        <span class="white">/</span>
+                        &nbsp;
+                        <a id="btn-login-dark" href="#" class="white">Dark</a>
+                        &nbsp;
+                        <span class="white">/</span>
+                        &nbsp;
+                        <a id="btn-login-blur" href="#" class="white">Blur</a>
+                        &nbsp;
+                        <span class="white">/</span>
+                        &nbsp;
+                        <a id="btn-login-light" href="#" class="white">Light</a>
+                        &nbsp; &nbsp; &nbsp;
+                    </div>
+                </div>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.main-content -->
+</div><!-- /.main-container -->
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+<script src="assets/components/jquery/dist/jquery.min.js"></script>
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script src="assets/components/jquery.1x/dist/jquery.min.js"></script>
+<![endif]-->
+<script src="assets/components/layer/dist/layer.js"></script>
+<script src="assets/js/cloud.js" type="text/javascript"></script>
+<script type="text/javascript">
+    if ('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+</script>
+<script src="assets/js/login.js" type="text/javascript"></script>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+    //you don't need this, just used for changing background
+    jQuery(function ($) {
+        $('#btn-login-dark').on('click', function (e) {
+            $('body').attr('class', 'login-layout');
+            $('#id-title').attr('class', 'white');
+            $('#id-company-text').attr('class', 'blue');
+            $('#nav-theme span').attr('class', 'blue');
+            $('#nav-theme a').attr('class', '');
+
+            e.preventDefault();
+        });
+        $('#btn-login-light').on('click', function (e) {
+            $('body').attr('class', 'login-layout light-login');
+            $('#id-title').attr('class', 'grey');
+            $('#id-company-text').attr('class', 'blue');
+            $('#nav-theme span').attr('class', 'blue');
+            $('#nav-theme a').attr('class', '');
+
+            e.preventDefault();
+        });
+        $('#btn-login-blur').on('click', function (e) {
+            $('body').attr('class', 'login-layout blur-login');
+            $('#id-title').attr('class', 'white');
+            $('#id-company-text').attr('class', 'light-blue');
+            $('#nav-theme span').attr('class', 'blue');
+            $('#nav-theme a').attr('class', '');
+
+            e.preventDefault();
+        });
+        $('#btn-login-cloud').on('click', function (e) {
+            $('body').attr('class', 'login-layout cloud-login');
+            $('#id-title').attr('class', 'light-grey');
+            $('#id-company-text').attr('class', 'white');
+            $('#nav-theme span').attr('class', 'white');
+            $('#nav-theme a').attr('class', 'white');
+
+            e.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>
