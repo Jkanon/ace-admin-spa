@@ -22,10 +22,10 @@ define(["datatables", "common", "app"], function (datatable, common, APP) {
                         }, className: 'treegrid-control', target: 0},
                     {type: "checkbox"},
                     {field: "name", title: "名称"},
-                    {field: "menutype", title: "类型"},
+                    {field: "menuType", title: "类型"},
                     {field: "icon", title: "图标"},
-                    {field: "url", title: "路径"},
-                    {field: "sortNo", title: "排序"},
+                    {field: "href", title: "路径"},
+                    {field: "sort", title: "排序"},
                     {title: "操作", toolbar: [
                             "edit", {
                                 icon: "trash-o",

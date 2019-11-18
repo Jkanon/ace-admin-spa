@@ -20,7 +20,7 @@
 # 截图
 ![](https://s2.ax1x.com/2019/11/02/KL0buT.png)
 ![](https://s2.ax1x.com/2019/11/15/MdxWaF.png)
-![](https://s2.ax1x.com/2019/11/15/MdzlZT.png)
+![](https://s2.ax1x.com/2019/11/19/McDXge.png)
 ![](https://s2.ax1x.com/2019/11/15/MdzBdO.png)
 
 # 特性

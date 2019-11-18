@@ -217,57 +217,54 @@
 <script src="assets/components/q.js/q.js"></script>
 <script data-main="assets/js/app" src="assets/components/requirejs/require.js"></script>
 
+<script id="tplSubMenus" type="text/html">
+    <li>
+        {{if children}}
+        <a href="#" class="dropdown-toggle">
+            <i class="menu-icon {{if icon}}{{icon}}{{else}}fa fa-caret-right{{/if}}"></i>
+            {{name}}
+            <b class="arrow fa fa-angle-down"></b>
+        </a>
+        <b class="arrow"></b>
+        <!-- 三级菜单 -->
+        <ul class="submenu">
+            {{each children thirdMenu i3}}
+                {{include 'tplSubMenus' thirdMenu}}
+            {{/each}}
+        </ul>
+        {{else}}
+        <a href="{{if href}}{{href}}{{else}}#{{/if}}" {{if _isUrl(href)}}target="_blank"{{/if}}>
+            <i class="menu-icon {{if icon}}{{icon}}{{else}}fa fa-caret-right{{/if}}"></i>
+            {{name}}
+        </a>
+        <b class="arrow"></b>
+        {{/if}}
+    </li>
+</script>
 <!-- 侧导航渲染模板 -->
 <script id="tplSideNav" type="text/html">
-{{each list val i}}
+{{each list topMenu i}}
     <li>
-        {{if val.subMenus}}
+        {{if topMenu.children}}
         <a href="javascript:;" class="dropdown-toggle">
-            <i class="menu-icon fa fa-{{val.icon}}"></i>
-            <span class="menu-text"> {{val.name}} </span>
+            <i class="menu-icon {{topMenu.icon}}"></i>
+            <span class="menu-text"> {{topMenu.name}} </span>
 
             <b class="arrow fa fa-angle-down"></b>
         </a>
         {{else}}
-        <a href="{{if val.href}}{{val.href}}{{/if}}">
-            <i class="menu-icon fa fa-{{val.icon}}"></i>
-            <span class="menu-text"> {{val.name}} </span>
+        <a href="{{if topMenu.href}}{{topMenu.href}}{{/if}}" {{if _isUrl(topMenu.href)}}target="_blank"{{/if}}>
+            <i class="menu-icon {{topMenu.icon}}"></i>
+            <span class="menu-text"> {{topMenu.name}} </span>
         </a>
         {{/if}}
         <b class="arrow"></b>
 
-        {{if val.subMenus}}
+        {{if topMenu.children}}
         <!-- 二级菜单 -->
         <ul class="submenu">
-            {{each val.subMenus subMenu i2}}
-            <li>
-            {{if subMenu.subMenus}}
-                <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-caret-right"></i>
-                    {{subMenu.name}}
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <b class="arrow"></b>
-                <!-- 三级菜单 -->
-                <ul class="submenu">
-                    {{each subMenu.subMenus thirdMenu i3}}
-                    <li class="">
-                        <a href="#">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            {{thirdMenu.name}}
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-                    {{/each}}
-                </ul>
-            {{else}}
-                <a href="{{if subMenu.href}}{{subMenu.href}}{{else}}#{{/if}}">
-                    <i class="menu-icon fa fa-caret-right"></i>
-                    {{subMenu.name}}
-                </a>
-                <b class="arrow"></b>
-            {{/if}}
-            </li>
+            {{each topMenu.children subMenu i2}}
+                {{include 'tplSubMenus' subMenu}}
             {{/each}}
         </ul>
         {{/if}}

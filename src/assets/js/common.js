@@ -3,6 +3,8 @@
  */
 define(['jquery', 'lodash', 'layer'], function ($, _) {
     "use strict";
+    /* url 正則 */
+    var reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
     var r20 = /%20/g,
         rbracket = /\[\]$/,
         rCRLF = /\r?\n/g,
@@ -589,6 +591,9 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
             num = Number(ip[0]) * 256 * 256 * 256 + Number(ip[1]) * 256 * 256 + Number(ip[2]) * 256 + Number(ip[3]);
             num = num >>> 0;
             return num;
+        },
+        isUrl: function(input) {
+            return reg.test(input);
         },
         getToken: getToken,
         getCurrentUser: getCurrentUser,
