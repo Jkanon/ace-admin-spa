@@ -78,6 +78,8 @@ template.defaults.imports.defaults = function(){
 };
 
 define(['ace-elements', 'common'], function(ACE, common){
+    template.defaults.imports._isUrl = common.isUrl;
+
     //通过requirejs引入时，ace.min.js中的这句话执行时ace.demo还未定义，因此这边手动重新执行一遍
     try {
         //true参数不可少，否则通过requirejs引入也无法真正执行
@@ -99,7 +101,7 @@ define(['ace-elements', 'common'], function(ACE, common){
         Q.reg('home', function(){
             load('dashBoard')
         }).reg(/(.+)/, function(path){
-            load(path == 'home' ? 'dashBoard' : path)
+            load(path === 'home' ? 'dashBoard' : path)
         }).init({
             index: 'home',
             pop: navchange
@@ -111,7 +113,7 @@ define(['ace-elements', 'common'], function(ACE, common){
             .on(ace.click_event, '#changePwd', changePwd)
             .on(ace.click_event, '#logout', common.logout)
             .on('keypress', '.input-group > input', function(ev) {
-                if (ev.keyCode == 13) {
+                if (ev.keyCode === 13) {
                     //回车
                     var btnOk = $(this).parent().find('button.js-ok');
                     btnOk && btnOk.length > 0 && btnOk.click();
@@ -123,7 +125,7 @@ define(['ace-elements', 'common'], function(ACE, common){
     //异步加载子页面
     function load(path) {
         $("#page-content").load("views/inner/" + path +".html",function(responseTxt,statusTxt,xhr) {
-            if (xhr.status == 200) {
+            if (xhr.status === 200) {
                 if (path !== 'dashBoard') {
                     require(['inner/' + path], function (Demo) {
                         if (Demo) {
@@ -140,9 +142,9 @@ define(['ace-elements', 'common'], function(ACE, common){
                         }
                     });
                 }
-            } else if (xhr.status == 404) {
+            } else if (xhr.status === 404) {
                 $('#page-content').html(template('tpl404', {}));
-            } else if (xhr.status == 500) {
+            } else if (xhr.status === 500) {
                 $('#page-content').html(template('tpl500', {}));
             }
         });
@@ -171,66 +173,12 @@ define(['ace-elements', 'common'], function(ACE, common){
     //Menu相关==================
     //获取左侧导航栏
     function initNav(){
-        var menus = [
-            {
-                "icon": "home",
-                "name": "后台首页",
-                "href": "#!home"
-            },
-            {
-                "icon": "tachometer",
-                "name": "系统监控",
-                "subMenus": [
-                    {
-                        "icon": "",
-                        "name": "定时任务",
-                        "href": "#!quartz-jobs"
-                    },{
-                        "icon": "",
-                        "name": "操作日志",
-                        "href": "#!logs"
-                    }
-                ]
-            },
-            {
-                "icon": "cog",
-                "name": "系统管理",
-                "subMenus": [/*{
-                    "icon": "",
-                    "name": "菜单管理"
-                },{
-                    "icon": "",
-                    "name": "角色管理"
-                },*/{
-                    "icon": "",
-                    "name": "机构管理",
-                    "href": "#!orgs"
-                },{
-                    "icon": "",
-                    "name": "用户管理",
-                    "href": "#!users"
-                },{
-                    "icon": "",
-                    "name": "角色管理",
-                    "href": "#!roles"
-                },{
-                    "icon": "",
-                    "name": "菜单管理",
-                    "href": "#!menus"
-                }/*,{
-                    "icon": "",
-                    "name": "参数设置"
-                },{
-                    "icon": "leaf",
-                    "name": "二级菜单",
-                    "subMenus": [{
-                        "icon": "",
-                        "name": "三级菜单"
-                    }]
-                }*/]
+        common.get("/permission", { token: common.getToken() }, function(data) {
+            var menus = data.menus;
+            if (menus && menus.length > 0) {
+                document.getElementById("index-sidenav").innerHTML = template('tplSideNav', { list: menus });
             }
-        ];
-        document.getElementById("index-sidenav").innerHTML = template('tplSideNav', { list: menus });
+        }, false);
     }
 
     /**
@@ -238,7 +186,7 @@ define(['ace-elements', 'common'], function(ACE, common){
      * @param L
      */
     function navchange() {/* 每次有url变更时都会触发pop回调 */
-        var L = arguments.length > 1 ? arguments[1] : arguments[0]
+        var L = arguments.length > 1 ? arguments[1] : arguments[0];
         //菜单栈
         var stack = [];
         var c = $('.nav a[href="#!' + L + '"]');
@@ -248,7 +196,7 @@ define(['ace-elements', 'common'], function(ACE, common){
             stack.unshift({"name": $.trim(c.text()), "href": c.attr('href')});
             a[0].className = 'active';
             var p, link;
-            while((p = a.parent()) && p[0].tagName == "UL" && p.hasClass('submenu')) {
+            while((p = a.parent()) && p[0].tagName === "UL" && p.hasClass('submenu')) {
                 a = p.parent();
                 link = p.siblings('a:first');
                 stack.unshift({"name": $.trim(link.text()), "href": link.attr('href')});
