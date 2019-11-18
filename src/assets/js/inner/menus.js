@@ -23,7 +23,11 @@ define(["datatables", "common", "app"], function (datatable, common, APP) {
                     {type: "checkbox"},
                     {field: "name", title: "名称"},
                     {field: "menuType", title: "类型"},
-                    {field: "icon", title: "图标"},
+                    {field: "icon", title: "图标", render: function(data) {
+                        if (data) {
+                            return '<span class="bigger-140"><i class="' + data + '"></i></span>';
+                        }
+                    }},
                     {field: "href", title: "路径"},
                     {field: "sort", title: "排序"},
                     {title: "操作", toolbar: [

@@ -83,7 +83,7 @@ const menus = [
             "isLeaf": false,
             "children": [{
                 "id":"8d1ebd663688965f1fd86a2f0ead3416",
-                "icon": "fa fa-external-link",
+                "icon": "fa fa-external-link green",
                 "name": "外部链接",
                 "href": "https://www.baidu.com",
                 "menuType": 1,
