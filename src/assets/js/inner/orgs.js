@@ -8,14 +8,17 @@ define(["datatables", "common", "app"], function (datatable, common, APP) {
             this.initForm();
         },
         initTree: function() {
-            common.get(this.API.queryPage, {}, function(data){
-                common.initZtree($("#orgs-tree"), data, {
-                    data: {
-                        key: {
-                            name: "departName"
+            common.get({
+                url: this.API.queryPage,
+                success: function(data) {
+                    common.initZtree($("#orgs-tree"), data, {
+                        data: {
+                            key: {
+                                name: "departName"
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
         },
         initForm: function(data) {

@@ -3,7 +3,7 @@
 # 简介
 
 基于Boostrap Ace Admin的单页面响应式后台管理前端系统，适合后端程序员或者没有时间学习新的前端框架的人员使用，减少学习成本，拿来即用。<br/>
-目前仅实现了登录功能、用户管理列表，菜单管理列表，其它的待后续补充<br/>
+本框架增对表格和表单做了大量封装，易于快速开发。
 
 涉及技术栈：
 - bootstrap ui样式
@@ -14,8 +14,9 @@
 - bower 前端依赖库管理
 - gulp 打包构建
 
-# 在线Demo
-[点击此处](https://jkanon.github.io/ace-admin-spa/index.html)
+# [在线Demo](https://jkanon.github.io/ace-admin-spa/index.html)
+用户名/密码随意填<br />
+可操作增删改，刷新页面之后恢复初始状态
 
 # 截图
 ![](https://s2.ax1x.com/2019/11/02/KL0buT.png)
@@ -66,7 +67,7 @@ $ gulp build  // 然后直接把dist中的目标文件丢到生产环境中去
 
 # 开发指南
 ### 总体流程
-- 定义路由，修改`src/app.js`中的`menus`变量
+- 定义路由，修改`mock/modules/menus.js`中的`menus`变量
 - 每个子页面由同名的`html`和`js`组成
 - 在[src/views/inner](src/views/inner)中添加路由对应的子页面html文件
 - 在[src/assets/js/inner](src/assets/js/inner)中添加子页面同名的js文件

@@ -56,9 +56,11 @@ define(["datatables", "common", "app"], function (datatable, common, APP) {
         },
         reloadData: function() {
             var self = this;
-            common.get(self.API.queryList, null, function(data) {
-                self.data = data;
-                self.redrawTable();
+            common.get({
+                url: self.API.queryList, success: function(data) {
+                    self.data = data;
+                    self.redrawTable();
+                }
             });
         },
         redrawTable: function() {

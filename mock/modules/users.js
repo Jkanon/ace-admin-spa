@@ -100,6 +100,7 @@ const userList = [
         "status":1
     }
 ];
+
 module.exports = [
 {
     url: '/sys/users',
@@ -115,6 +116,44 @@ module.exports = [
                 recordsFiltered: userList.length,
                 data: userList
             },
+            "timestamp":Number(new Date())
+        };
+    }
+},
+{
+    url: '/sys/users',
+    type: 'post',
+    response: function(config) {
+        const user = {
+            ...config.body,
+            id: userList.length + (Math.random() * 100).toFixed(0),
+            status: 0
+        };
+        userList.unshift(user);
+        return {
+            "success": true,
+            "message": "操作成功！",
+            "code": 200,
+            "data": user,
+            "timestamp":Number(new Date())
+        };
+    }
+},
+{
+    url: '/sys/users/:id',
+    type: 'put',
+    response: function(config) {
+        for (let i = 0; i < userList.length; i++) {
+            if (config.params.id === userList[i].id) {
+                userList[i] = { ...userList[i], ...config.body };
+                break;
+            }
+        }
+        return {
+            "success": true,
+            "message": "操作成功！",
+            "code": 200,
+            "data": config.body,
             "timestamp":Number(new Date())
         };
     }

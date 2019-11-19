@@ -4,11 +4,11 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
         , adminAccount: "admin"
         , API: {
             queryPage: "/sys/users",
-            add: "/admusers",
-            edit: "/admusers/{id}",
-            "delete": "/admusers/{id}",
-            resetPwd: "/admusers/{id}/password",
-            freeze: "/admusers/{id}/status/{status}",
+            add: "/sys/users",
+            edit: "/sys/users/{id}",
+            "delete": "/sys/users/{id}",
+            resetPwd: "/sys/users/{id}/password",
+            freeze: "/sys/users/{id}/status/{status}",
         }
         , init: function () {
             this.initMainTable();
@@ -87,17 +87,19 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                 .on("freeze", function(event, options){
                     var flag = $(options.target).is(":checked");
                     if (!flag) {
-                        if (options.data.loginName === self.adminAccount) {
+                        if (options.data.username === self.adminAccount) {
                             message.warning("无法冻结管理员账号！");
                             $(options.target).prop("checked",true);
                             return;
-                        } else if (common.getCurrentUser().loginName === options.data.loginName) {
+                        } else if (common.getCurrentUser().username === options.data.username) {
                             message.warning("无法冻结当前登录用户！");
                             $(options.target).prop("checked",true);
                             return;
                         }
                     }
-                    self.freeze(options.data.id, flag ? "enable" : "disable");
+                    self.freeze(options.data.id, flag ? "enable" : "disable", function() {
+                        $(options.target).prop("checked", !flag);
+                    });
                 })
             ;
         }
@@ -172,13 +174,20 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
         }
 
         , resetPassword: function(id) {
-            common.put(this.API.resetPwd.replace("{id}", id), {}, function(){
-                message.success("密码已重置！")
+            common.put({
+                url: this.API.resetPwd.replace("{id}", id),
+                success: function() {
+                    message.success("密码已重置！")
+                }
             })
         }
 
-        , freeze: function(id, status) {
-            common.put(this.API.freeze.replace("{id}", id).replace("{status}", status), {}, function() {
+        , freeze: function(id, status, error) {
+            common.put({
+                url: this.API.freeze.replace("{id}", id).replace("{status}", status),
+                success: function() {
+                },
+                error: error
             })
         }
     };

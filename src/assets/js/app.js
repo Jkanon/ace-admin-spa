@@ -159,12 +159,12 @@ define(['ace-elements', 'common'], function(ACE, common){
                     common.logout();
                 });
             }
-            $("#nav-username").text(user.username || user.loginName);
+            $("#nav-username").text(user.realname || user.username);
             var $photo = $("#nav-user-photo");
             if(user.avatar) {
                 $photo.attr('src', "assets/images/avatars/" + user.avatar);
             }
-            $photo.attr('alt', user.username || user.loginName);
+            $photo.attr('alt', user.realname || user.username);
         } catch (e) {
             console.log(e.message);
         }
@@ -173,12 +173,16 @@ define(['ace-elements', 'common'], function(ACE, common){
     //Menu相关==================
     //获取左侧导航栏
     function initNav(){
-        common.get("/permission", { token: common.getToken() }, function(data) {
-            var menus = data.menus;
-            if (menus && menus.length > 0) {
-                document.getElementById("index-sidenav").innerHTML = template('tplSideNav', { list: menus });
-            }
-        }, false);
+        common.get({ url: "/permission",
+            data: { token: common.getToken() },
+            success: function(data) {
+                var menus = data.menus;
+                if (menus && menus.length > 0) {
+                    document.getElementById("index-sidenav").innerHTML = template('tplSideNav', {list: menus});
+                }
+            },
+            async: false
+        });
     }
 
     /**
@@ -269,10 +273,10 @@ define(['ace-elements', 'common'], function(ACE, common){
          * @param callback
          */
         saveData: function(api, type, data, callback) {
-            if(type == 'add') {
-                common.post( api["add"], data, callback)
+            if(type === 'add') {
+                common.post({ url: api["add"], data: data, success: callback });
             } else {
-                common.put(api["edit"].replace('{id}', data.id), data, callback)
+                common.put({ url: api["edit"].replace('{id}', data.id), data: data, success: callback });
             }
         }
 
@@ -282,11 +286,14 @@ define(['ace-elements', 'common'], function(ACE, common){
          * @param id
          */
         ,deleteData: function(api, id, callback){
-            common['delete'](api["delete"].replace('{id}', id), null, function(ret){
-                if (typeof callback == 'function') {
-                    callback(ret);
+            common['delete']({
+                url: api["delete"].replace('{id}', id),
+                success: function(ret) {
+                    if (typeof callback == 'function') {
+                        callback(ret);
+                    }
+                    message.success("删除成功");
                 }
-                message.success("删除成功");
             })
         }
 

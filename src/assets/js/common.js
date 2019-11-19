@@ -165,13 +165,13 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
         } else {
             var responseJson = XMLHttpRequest.responseJSON;
             var status = XMLHttpRequest.status;
-            if (textStatus == "404") {
+            if (textStatus === "404") {
                 message.error("请求地址出错!");
-            } else if (status == '401') {
+            } else if (status === '401') {
                 layer.alert(responseJson && responseJson.msg || "身份验证失败，请重新登录", {icon: 5}, function () {
                     logout();
                 });
-            } else if (status == '504') {
+            } else if (status === '504') {
                 message.error("请求超时!");
             } else {
                 if (responseJson && responseJson.msg) {
@@ -191,22 +191,24 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
      * @param [callBackFunc] 成功回调
      * @param [async] 是否异步调用
      */
-    function ajax(url, type, param, callBackFunc, async) {
+    function ajax(options) {
         //打开加载层
         var index = layer.load();
         var ajaxOption = {
-            url: this.assemblyUrl(url),
-            type: type || 'get',
-            async: async !== false,
-            dataType: "json",
+            url: this.assemblyUrl(options.url),
+            type: options.type || 'get',
+            async: options.async !== false,
+            dataType: options.dataType || "json",
             beforeSend: function (request) {
                 request.setRequestHeader("X-Access-Token", getToken());
+                options.beforeSend && options.beforeSend(request);
             },
             complete: function (XMLHttpRequest, textStatus) {
                 //关闭加载层
                 layer.close(index);
+                options.complete && options.complete(XMLHttpRequest, textStatus);
             },
-            success: function (result) {
+            success: function (result, textStatus, XMLHttpRequest) {
                 window.globalErrorCode = 0;
                 if (_.result(result, statusName) !== statusCode) {
                     var filters = appConfig["filters"];
@@ -220,37 +222,41 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                     if (result[msgName]) {
                         //提示错误消息
                         message.error(result[msgName]);
+                        options.error && options.error(XMLHttpRequest, textStatus, result[msgName], result);
                     }
                     return;
                 }
                 try {
-                    callBackFunc(_.result(result, dataName));
+                    options.success && options.success(_.result(result, dataName));
                 } catch (e) {
                     console.log(e)
                 }
             },
-            error: ajaxErrorHandler
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                ajaxErrorHandler.call(this, XMLHttpRequest, textStatus, errorThrown);
+                options.error && options.error(XMLHttpRequest, textStatus, errorThrown);
+            }
         };
-        if (param) {
-            if (_.isString(param)) {
-                ajaxOption.data = param;
+        if (options.data) {
+            if (_.isString(options.data)) {
+                ajaxOption.data = options.data;
                 ajaxOption.contentType = "application/json";
-            } else if (_.isPlainObject(param)) {
-                if (!_.isEmpty(param)) {
-                    ajaxOption.data = param;
+            } else if (_.isPlainObject(options.data)) {
+                if (!_.isEmpty(options.data)) {
+                    ajaxOption.data = options.data;
                     if (ajaxOption.type.toLowerCase() !== 'get') {
-                        ajaxOption.data = JSON.stringify(param);
+                        ajaxOption.data = JSON.stringify(options.data);
                     }
                     ajaxOption.contentType = "application/json";
                 }
             } else {
-                ajaxOption.data = param;
+                ajaxOption.data = options.data;
                 ajaxOption.contentType = false;
                 ajaxOption.processData = false;
             }
         }
 
-        $.ajax(ajaxOption);
+        $.ajax($.extend({}, options, ajaxOption));
 
     }
 
@@ -465,7 +471,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
         confirm: layer.confirm
     };
 
-    var exports = {
+    return {
         ApiContext: _.result(appConfig, "global.servletUrl"),
         modal: modal,
         popconfirm: function (options) {
@@ -497,17 +503,17 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
         download: function(url) {
             window.open(url + (url.indexOf("?") != -1 ? "&" : "?") + "token=" + this.getToken());
         },
-        get: function (url, param, callBackFunc, async) {
-            this.ajax(url, "get", param, callBackFunc, async)
+        get: function (options) {
+            this.ajax($.extend(options, { type: "get" }))
         },
-        post: function (url, param, callBackFunc, async) {
-            this.ajax(url, "post", param, callBackFunc, async)
+        post: function (options) {
+            this.ajax($.extend(options, { type: "post" }))
         },
-        put: function (url, param, callBackFunc, async) {
-            this.ajax(url, "put", param, callBackFunc, async)
+        put: function (options) {
+            this.ajax($.extend(options, { type: "put" }))
         },
-        "delete": function (url, param, callBackFunc, async) {
-            this.ajax(url, "delete", param, callBackFunc, async)
+        "delete": function (options) {
+            this.ajax($.extend(options, { type: "delete" }))
         },
         initZtree: function (elem, data, settings) {
             var defaultSetting = {
@@ -599,5 +605,4 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
         getCurrentUser: getCurrentUser,
         logout: logout
     };
-    return exports;
 });
