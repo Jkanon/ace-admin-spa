@@ -1,3 +1,5 @@
+const util = require("../util");
+
 const userList = [
     {
         "birthday":null,
@@ -156,6 +158,13 @@ module.exports = [
             "data": config.body,
             "timestamp":Number(new Date())
         };
+    }
+},
+{
+    url: '/sys/users/:id',
+    type: 'delete',
+    response: function(config) {
+        return util.deleteTableList(config, userList);
     }
 },
 {
