@@ -1,18 +1,21 @@
 {
   "name": "ace-admin-spa",
   "version": "1.0.0",
-  "description": "单页面后台管理系统",
-  "main": "gulpfile.js",
+  "private": true,
+  "description": "ACE单页面后台管理系统",
   "scripts": {
+    "build": "gulp build",
     "start": "node app.js",
     "start:no-mock": "node app.js MOCK=false",
     "gh-pages": "gh-pages -d dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npm install -g bower && bower install"
   },
   "author": {
     "name": "Jkanon",
     "email": "im.Jkanon@gmail.com"
   },
+  "company": "Jkanon",
   "license": "MIT",
   "homepage": "https://jkanon.github.io/ace-admin-spa",
   "devDependencies": {

@@ -24,18 +24,17 @@ require.config({
         "datatables.treeGrid": "dataTables.treeGrid",
         "layer": "../components/layer/dist/layer",
         "lodash": "../components/lodash/lodash",
-        //"jquery.maskedinput": "../components/jquery.maskedinput/dist/jquery.maskedinput.min"
-        "jquery.inputmask": "../components/inputmask/dist/jquery.inputmask.bundle"
-        , "jquery.inputlimiter": "../components/jquery-inputlimiter/jquery-inputlimiter/jquery.inputlimiter.1.3.1"
-        , "jquery.validate.message-zh": "../components/jquery-validation/src/localization/messages_zh"
-        , "jquery.validate.min": "../components/jquery-validation/dist/jquery.validate.min"
-        , "jquery.additional-methods": "../components/jquery-validation/dist/additional-methods.min"
-        , "jquery.validate.custom": "custom.jquery.validate"
-        , "autosize": "../components/autosize/dist/autosize.min"
-        , "dropzone": "../components/dropzone/dist/min/dropzone-amd-module.min"
-        , "zTree": "../components/zTree/js/jquery.ztree.all.min"
-        , "codemirror": "../components/codemirror/5.42.0/lib/codemirror.min"
-        , "shell": "../components/codemirror/5.42.0/mode/shell/shell"
+        "jquery.inputmask": "../components/inputmask/dist/jquery.inputmask.bundle",
+        "jquery.inputlimiter": "../components/jquery-inputlimiter/jquery-inputlimiter/jquery.inputlimiter.1.3.1",
+        "jquery.validate.message-zh": "../components/jquery-validation/src/localization/messages_zh",
+        "jquery.validate.min": "../components/jquery-validation/dist/jquery.validate.min",
+        "jquery.additional-methods": "../components/jquery-validation/dist/additional-methods.min",
+        "jquery.validate.custom": "custom.jquery.validate",
+        "autosize": "../components/autosize/dist/autosize.min",
+        "dropzone": "../components/dropzone/dist/min/dropzone-amd-module.min",
+        "zTree": "../components/zTree/js/jquery.ztree.all.min",
+        "codemirror": "../components/codemirror/5.42.0/lib/codemirror.min",
+        "shell": "../components/codemirror/5.42.0/mode/shell/shell"
     },
     shim: {
         "bootstrap": {
@@ -137,7 +136,7 @@ define(['ace-elements', 'common'], function(ACE, common){
                         }
                     }, function(err) {
                         console.log(err.requireType);
-                        if ("scripterror" == err.requireType) {
+                        if ("scripterror" === err.requireType) {
 
                         }
                     });
@@ -242,7 +241,7 @@ define(['ace-elements', 'common'], function(ACE, common){
                 var txt2 = $("#txtNewPwd").val();
                 var txt3 = $("#txtNewPwdConfirm").val();
 
-                if(txt1 == "" || txt2 == "" || txt3 == ""){
+                if(txt1 === "" || txt2 === "" || txt3 === ""){
                     message.error("密码不能为空");
                     return false;
                 }

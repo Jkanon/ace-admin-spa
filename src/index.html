@@ -217,11 +217,11 @@
 <script src="assets/components/q.js/q.js"></script>
 <script data-main="assets/js/app" src="assets/components/requirejs/require.js"></script>
 
-<script id="tplSubMenus" type="text/html">
+<script id="tplSideSubMenus" type="text/html">
     <li>
         {{if children}}
         <a href="#" class="dropdown-toggle">
-            <i class="menu-icon {{if icon}}{{icon}}{{else}}fa fa-caret-right{{/if}}"></i>
+            <i class="menu-icon {{if icon}}{{icon}}{{else}}fa fa-caret-right{{/if}}"{{if icon}} style="display: inline-block;"{{/if}}></i>
             {{name}}
             <b class="arrow fa fa-angle-down"></b>
         </a>
@@ -229,12 +229,12 @@
         <!-- 三级菜单 -->
         <ul class="submenu">
             {{each children thirdMenu i3}}
-                {{include 'tplSubMenus' thirdMenu}}
+                {{include 'tplSideSubMenus' thirdMenu}}
             {{/each}}
         </ul>
         {{else}}
         <a href="{{if href}}{{href}}{{else}}#{{/if}}" {{if _isUrl(href)}}target="_blank"{{/if}}>
-            <i class="menu-icon {{if icon}}{{icon}}{{else}}fa fa-caret-right{{/if}}"></i>
+            <i class="menu-icon {{if icon}}{{icon}}{{else}}fa fa-caret-right{{/if}}"{{if icon}} style="display: inline-block;"{{/if}}></i>
             {{name}}
         </a>
         <b class="arrow"></b>
@@ -264,7 +264,7 @@
         <!-- 二级菜单 -->
         <ul class="submenu">
             {{each topMenu.children subMenu i2}}
-                {{include 'tplSubMenus' subMenu}}
+                {{include 'tplSideSubMenus' subMenu}}
             {{/each}}
         </ul>
         {{/if}}

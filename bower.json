@@ -1,7 +1,6 @@
 {
   "name": "ace-admin-spa",
-  "description": "单页面后台管理系统",
-  "main": "gulpfile.js",
+  "description": "ACE单页面后台管理系统",
   "authors": [
     {
       "name": "Jkanon",

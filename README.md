@@ -2,8 +2,7 @@
 
 # 简介
 
-基于Boostrap Ace Admin的单页面响应式后台管理前端系统，适合后端程序员或者没有时间学习新的前端框架的人员使用，减少学习成本，拿来即用。<br/>
-本框架增对表格和表单做了大量封装，易于快速开发。
+基于Boostrap Ace Admin的单页面响应式后台管理前端系统，适合后端程序员或者没有时间学习新的前端框架的人员使用，减少学习成本，拿来即用。
 
 涉及技术栈：
 - bootstrap ui样式
@@ -30,26 +29,21 @@
 - 前后端分离
 - 模块按需加载。引入RequireJS在网页端动态加载
 - 运行时前端模版引擎渲染
-- 对datatables进行二次封装，使得接口简单易用
-- 引入layer来做模态框
-- 支持mock，前后端联调时可以无缝对接
-- 支持接口转发，用于联调
+- 对datatables，表单等进行了大量封装，简单易用
+- 引入layer,zTree等第三方插件，并进行了本地化改造，统一UI接口
+- 支持数据接口模拟，前后端联调时可以无缝对接。支持纯前端模拟和本地服务模拟两种方式
+- 支持接口转发，便于联调
 - 支持ace的所有样式，具体可参考[Ace](http://ace.jeka.by/)
 
 # 使用
 - 准备工作
-    - 安装nodejs
-    - 安装bower
-    
-    npm install -g bower
+    - 安装[nodejs](https://nodejs.org/en/)
     - 安装gulp命令行工具
     
-    npm install -g gulp-cli
+    `npm install -g gulp-cli`
     - 安装依赖库
     
-    在项目根目录下执行：<br/>
-    1、npm install<br/>
-    2、bower install
+    在项目根目录下执行`npm install`
 - 开发
 ```bash
 # 开启本地数据模拟
@@ -61,7 +55,7 @@ $ npm run start:no-mock
 
 - 部署
 ```bash
-$ gulp build  // 然后直接把dist中的目标文件丢到生产环境中去
+$ npm run build  // 然后直接把dist中的目标文件丢到生产环境中去
 ```
 
 
@@ -89,18 +83,18 @@ $ gulp build  // 然后直接把dist中的目标文件丢到生产环境中去
 ```
 - 可以根据需要适配接口格式。请修改`common.js`中的`appConfig["global"].response`字段，支持嵌套格式。同时需要单独修改`login.js`文件。
 
-### 数据mock
-- mock数据文件放在[mock/modules](mock/modules)下
-- mock数据文件主要声明需要mock的接口地址，请求方法，返回的数据
+### 数据模拟（Mock）
+- Mock数据文件放在[mock/modules](mock/modules)下
+- Mock数据文件主要声明需要模拟的接口地址，请求方法，返回的数据
 
 ### html公用模版引入
-- 在html文件中支持@@include函数引入公共模块
-- 公共模块文件将在打包构建的时候引入
-- 约定模块存放目录为[src/views/template](src/views/template)
+- 在`html`文件中支持`@@include`函数引入公共`html模版`
+- 约定引用的模块文件存放目录为[src/views/template](src/views/template)
+- 公共模块文件将在打包构建的时候引入到目标文件中去
 
-### ie8
-如果需要兼容ie8，请避免使用ie8的关键字。如delete, class, default, switch等<br/>
-本系统也没能避开关键字的坑，因此遗留着部分ie8的关键字，使用的时候请通过字符串下标的方式进行引用。
+### IE8
+如果需要兼容`IE8`，请避免使用`IE8`的关键字。如`delete`, `class`, `default`, `switch`等<br/>
+本系统也没能避开关键字的坑，因此遗留着部分`IE8`的关键字，使用的时候请通过字符串下标的方式进行引用。
 
 # 支持环境
 
