@@ -596,7 +596,11 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
             //TODO 这边需要改进，通过dom判断lp出现的次数*38
             //'<"layui-box"lp><"layui-form"t><"layui-box"ilp>'
             var full = $(window).height() - $('thead', options.elem).offset().top - $('thead', options.elem).outerHeight() - 38 - 15 + 8;
-            datatableOption.scrollY = eval(options.height.replace('full', full))
+            try {
+                datatableOption.scrollY = eval(options.height.toString().replace('full', full));
+            } catch (e) {
+                datatableOption.scrollY = options.height;
+            }
         }
 
         if(typeof options.createdRow === 'function') {
@@ -619,15 +623,18 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                     request.setRequestHeader("X-Access-Token", common.getToken());
                 }
                 ,dataSrc: function (res) {
+                    var data = [];
                     if(result(res, response.statusName) !== response.statusCode) {
                         layer.msg("请求出错了！", {icon: 5});
                         that.elem.fnProcessingIndicator(false);
-                        return;
+                        res.recordsTotal = 0;
+                        res.recordsFiltered = 0;
+                    } else {
+                        res.draw = result(res, response.draw);
+                        res.recordsTotal = result(res, response.countName);
+                        res.recordsFiltered = result(res, response.filterCountName);
+                        data = result(res, response.dataName);
                     }
-                    res.draw = result(res, response.draw);
-                    res.recordsTotal = result(res, response.countName);
-                    res.recordsFiltered = result(res, response.filterCountName);
-                    var data = result(res, response.dataName);
                     data = function() {
                         //回调
                         if (typeof options.responseHandler === 'function') {
