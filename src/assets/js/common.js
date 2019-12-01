@@ -168,17 +168,20 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
             if (textStatus === "404") {
                 message.error("请求地址出错!");
             } else if (status === '401') {
-                layer.alert(responseJson && responseJson.msg || "身份验证失败，请重新登录", {icon: 5}, function () {
+                layer.alert(responseJson && _.result(responseJson, msgName) || "身份验证失败，请重新登录", {icon: 5}, function () {
                     logout();
                 });
             } else if (status === '504') {
                 message.error("请求超时!");
             } else {
-                if (responseJson && responseJson.msg) {
-                    message.error(responseJson.msg);
-                } else {
-                    message.error("请求失败");
+                if (responseJson) {
+                    var msg = _.result(responseJson, msgName);
+                    if (msg) {
+                        message.error(msg);
+                        return;
+                    }
                 }
+                message.error("请求失败");
             }
         }
     }
@@ -219,10 +222,11 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                             return
                         }
                     }
-                    if (result[msgName]) {
+                    var msg = _.result(result, msgName);
+                    if (msg) {
                         //提示错误消息
-                        message.error(result[msgName]);
-                        options.error && options.error(XMLHttpRequest, textStatus, result[msgName], result);
+                        message.error(msg);
+                        options.error && options.error(XMLHttpRequest, textStatus, msg, result);
                     }
                     return;
                 }
@@ -353,6 +357,25 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                         require(['jquery.inputmask'], function () {
                             doneFlag--;
                             maskinput.inputmask();
+                            sc();
+                        });
+                    }
+                    var chosenSelect = $('.chosen-select');
+                    if (chosenSelect.length > 0) {
+                        doneFlag++;
+                        require(['jquery.chosen'], function (){
+                            doneFlag--;
+                            var defaultOptions = {
+                                allow_single_deselect:true,
+                                placeholder_text_multiple: "请选择",
+                                placeholder_text_single: "请选择",
+                                no_results_text: "无匹配项",
+                                width: "66.66666667%"
+                            };
+                            $('.chosen-select').each(function() {
+                                var $this = $(this);
+                                $this.chosen($.extend({}, defaultOptions, $this.data("options")));
+                            });
                             sc();
                         });
                     }

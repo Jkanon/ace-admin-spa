@@ -4,7 +4,7 @@
     <div data-toggle="buttons" class="btn-group">
         {{each item.options it i}}
         <label class="btn btn-primary">
-            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}"{{if it.value===item.value||it.value===_().result(data, item.name)}} checked{{else if it['default'] && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}} checked{{/if}}{{if item.required}} required{{/if}}/>
+            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}"{{if it.value===item.value||it.value===_.result(data, item.name)}} checked{{else if it['default'] && (typeof item.value === 'undefined') && (typeof _.result(data, item.name) === 'undefined')}} checked{{/if}}{{if item.required}} required{{/if}}/>
             {{it.label}}
         </label>
         {{/each}}
@@ -14,7 +14,7 @@
         {{each item.options it i}}
         {{if i>0}} &nbsp; &nbsp; &nbsp;{{/if}}
         <label class="inline">
-            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}"{{if it.value===item.value||it.value===_().result(data, item.name)}} checked{{else if it['default'] && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}} checked{{/if}}{{if item.required}} required{{/if}}/>
+            <input name="{{item.name}}" type="{{item.type||radio}}" class="ace{{if item.className}} {{item.className}}{{/if}}" value="{{it.value}}"{{if it.value===item.value||it.value===_.result(data, item.name)}} checked{{else if it['default'] && (typeof item.value === 'undefined') && (typeof _.result(data, item.name) === 'undefined')}} checked{{/if}}{{if item.required}} required{{/if}}/>
             <span class="lbl middle">{{it.label}}</span>
         </label>
         {{/each}}
@@ -28,13 +28,13 @@
 <!-- switch开关 -->
 <script id="tpl-switch4form" type="text/html">
     <label class="inline">
-        <input type="checkbox" name="{{item.name}}" id="txt{{item.name}}" class="ace ace-switch {{if item.switchtype}}ace-switch-{{item.switchtype}}{{/if}} {{if item.color}}{{item.color}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.checkedValue===item.value||item.checkedValue===_().result(data, item.name)}}checked{{else if (item['default'] === true || item['default'] === 'checked') && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}checked{{/if}}{{if item.required}} required{{/if}}>
-        <span class="lbl middle"></span>
+        <input type="checkbox" name="{{item.name}}" id="txt{{item.name}}" class="ace ace-switch {{if item.switchtype}}ace-switch-{{item.switchtype}}{{/if}} {{if item.color}}{{item.color}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.checkedValue===item.value||item.checkedValue===_.result(data, item.name)}}checked{{else if (item['default'] === true || item['default'] === 'checked') && (typeof item.value === 'undefined') && (typeof _.result(data, item.name) === 'undefined')}}checked{{/if}}{{if item.required}} required{{/if}}>
+        <span class="lbl middle"{{if item.lbl}} data-lbl="{{if typeof item.lbl === 'string'}}{{item.lbl}}{{else}}{{item.lbl[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.lbl[1]}}{{/if}}"{{/if}}></span>
     </label>
 </script>
 <!-- number -->
 <script id="tpl-number4form" type="text/html">
-    <input type="text" id="txt{{item.name}}" name="{{item.name}}" class="js-spinner{{if item.className}} {{item.className}}{{/if}}"{{if item.min}} min="{{item.min}}"{{/if}}{{if item.max}} max="{{item.max}}"{{/if}}{{if item.step}} max="{{item.step}}"{{/if}}{{if defaults(item.value, _().result(data, item.name), item['default'])}}value="{{defaults(item.value, _().result(data, item.name), item['default'])}}"{{/if}}{{if item.required}} required{{/if}}/>
+    <input type="text" id="txt{{item.name}}" name="{{item.name}}" class="js-spinner{{if item.className}} {{item.className}}{{/if}}"{{if item.min}} min="{{item.min}}"{{/if}}{{if item.max}} max="{{item.max}}"{{/if}}{{if item.step}} max="{{item.step}}"{{/if}}{{if defaults(item.value, _.result(data, item.name), item['default'])}}value="{{defaults(item.value, _.result(data, item.name), item['default'])}}"{{/if}}{{if item.required}} required{{/if}}/>
 </script>
 
 <script id="tpl-input4form" type="text/html">
@@ -43,7 +43,7 @@
         <!-- 带图标输入框 -->
         <span class="input-icon {{if item.suffix}}input-icon-right{{/if}}">
             {{if item.prefix}}<i class="ace-icon {{item.prefix}}"></i>{{/if}}
-            <input class="{{if item.size}}input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}"  value="{{defaults(item.value, _().result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}>
+            <input class="{{if item.size}}input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}"  value="{{defaults(item.value, _.result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}>
             {{if item.suffix}}<i class="ace-icon {{item.suffix}}"></i>{{/if}}
         </span>
         {{else if item.addonBefore || item.addonAfter}}
@@ -53,7 +53,7 @@
                     <i class="ace-icon {{item.addonBefore}}"></i>
                 </span>
                 {{/if}}
-                <input class="{{if item.size}}input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}"  value="{{defaults(item.value, _().result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}>
+                <input class="{{if item.size}}input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}"  value="{{defaults(item.value, _.result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}>
                 {{if item.addonAfter}}
                 <span class="input-group-addon">
                     <i class="ace-icon {{item.addonAfter}}"></i>
@@ -62,59 +62,87 @@
             </div>
         {{else}}
         <!-- 普通输入框 -->
-        <input type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}" {{if item.maxlength}}maxlength="{{item.maxlength}}"{{/if}} class="col-xs-10 col-sm-8{{if item.size}} input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}} value="{{defaults(item.value, _().result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}/>
+        <input type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}" {{if item.maxlength}}maxlength="{{item.maxlength}}"{{/if}} class="col-xs-10 col-sm-8{{if item.size}} input-{{item.size}}{{/if}}{{if item.className}} {{item.className}}{{/if}}" {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}} value="{{defaults(item.value, _.result(data, item.name))}}" autocomplete="off"{{if item.required}} required{{/if}}/>
         {{/if}}
     </div>
 </script>
 <!-- 文本域 -->
 <script id="tpl-textarea4form" type="text/html">
     <div class="clearfix">
-    <textarea class="form-control{{if item.maxLength}} limited{{/if}}{{if item.autosize}} autosize{{/if}}{{if item.className}} {{item.className}}{{/if}}" id="txt{{item.name}}" name="{{item.name}}" {{if item.maxLength}}maxlength="{{item.maxLength}}"{{/if}} placeholder="{{item.placeholder}}"{{if item.required}} required{{/if}}{{if item.props}} {{item.props}} {{/if}}>{{defaults(item.value, _().result(data, item.name), item['default'])}}</textarea>
+    <textarea class="form-control{{if item.maxLength}} limited{{/if}}{{if item.autosize}} autosize{{/if}}{{if item.className}} {{item.className}}{{/if}}" id="txt{{item.name}}" name="{{item.name}}" {{if item.maxLength}}maxlength="{{item.maxLength}}"{{/if}} placeholder="{{item.placeholder}}"{{if item.required}} required{{/if}}{{if item.props}} {{item.props}} {{/if}}>{{defaults(item.value, _.result(data, item.name), item['default'])}}</textarea>
     </div>
 </script>
 <!-- 下拉框 -->
 <script id="tpl-select4form" type="text/html">
-    <div class="clearfix">
-        <select class="input-medium{{if item.className}} {{item.className}}{{/if}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}>
-            {{if item.hasEmpty}}<option value="">{{if item.emptyText}}{{item.emptyText}}{{else}}------------------{{/if}}</option>{{/if}}
+    <div class="">
+        {{if item.multiple}}
+            <select multiple data-placeholder="{{if item.emptyText}}{{item.emptyText}}{{else}}请选择{{/if}}" class="chosen-select {{if item.className}} {{item.className}}{{/if}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}{{if item.settings}} data-options='{{JSON.stringify(item.settings)}}'{{/if}}>
+            {{if item.hasEmpty || item.emptyText}}<option value="">{{if item.emptyText}}{{item.emptyText}}{{else}}请选择{{/if}}</option>{{/if}}
             {{each item.options it i}}
-            <option value="{{typeof it.value === 'undefined' && it.label || it.value}}"{{if it.value===item.value||it.value===_().result(data, item.name)}}selected{{else if it['default'] && (typeof item.value === 'undefined') && (typeof _().result(data, item.name) === 'undefined')}}selected{{/if}}>{{it.label}}</option>
+                {{if it.group}}
+                <optgroup label="{{it.label}}">
+                    {{each it.value groupOption j}}
+                    <option value="{{typeof groupOption.value === 'undefined' && groupOption.label || groupOption.value}}"{{if groupOption.value===item.value||it.value===_.result(data, item.name)}}selected{{else if groupOption.default && (typeof item.value === 'undefined') && (typeof _.result(data, item.name) === 'undefined')}}selected{{/if}}>{{groupOption.label}}{{if groupOption.disabled}} disabled{{/if}}</option>
+                    {{/each}}
+                </optgroup>
+                {{else}}
+                <option value="{{typeof it.value === 'undefined' && it.label || it.value}}"{{if it.value===item.value||it.value===_.result(data, item.name)}}selected{{else if it.default && (typeof item.value === 'undefined') && (typeof _.result(data, item.name) === 'undefined')}}selected{{/if}}>{{it.label}}{{if it.disabled}} disabled{{/if}}</option>
+                {{/if}}
             {{/each}}
-        </select>
+            </select>
+        {{else}}
+            <select class="input-medium{{if item.className}} {{item.className}}{{/if}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}>
+            {{if item.hasEmpty}}<option value="">{{if item.emptyText}}{{item.emptyText}}{{else}}请选择{{/if}}</option>{{/if}}
+                {{each item.options it i}}
+                <option value="{{typeof it.value === 'undefined' && it.label || it.value}}"{{if it.value===item.value||it.value===_.result(data, item.name)}}selected{{else if it.default && (typeof item.value === 'undefined') && (typeof _.result(data, item.name) === 'undefined')}}selected{{/if}}>{{it.label}}{{if it.disabled}} disabled{{/if}}</option>
+                {{/each}}
+            </select>
+        {{/if}}
     </div>
 </script>
-
+<!-- 自定义html -->
+<script id="tpl-custom4form" type="text/html">
+    {{if item.raw !== false}}
+        {{@item.html}}
+    {{else}}
+        {{item.html}}
+    {{/if}}
+</script>
 <!-- 表单模版 -->
 <script id="tpl-formInput" type="text/html">
-    <div style="margin-top:15px;">
+    <div style="padding: 15px 20px 0 20px;">
         <form class="form-{{layout||'horizontal'}}" role="form">
-            {{each items item i}}
-            <div id="formGroup-{{item.name}}" class="{{if item.hidden}} hidden{{/if}}">
-            {{if i>0}}<div class="space-2"></div>{{/if}}
-            {{if item.type==='hidden'}}
-            <% if(!item.hiddenWhenNotExist || (typeof(item.value) === 'undefined' && _().result(data, item.name) || item.value)) { %>
-            <input type="hidden" name="{{item.name}}" value="{{typeof(item.value) === 'undefined' && _().result(data, item.name) || item.value}}" />
-            <% } %>
+            {{each list item i}}
+            {{if item.type === 'custom'}}
+                <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
             {{else}}
-            <div class="form-group">
-                {{if layout === "vertical"}}
-                <div class="plrw">
-                    <label for="txt{{item.name}}" class="control-label">
-                        <span class="{{if item.required && hideRequiredMark !== true}}ace-form-item-required{{/if}}">{{item.label}}</span>
-                    </label>
-                    <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
-                </div>
+                <div id="formGroup-{{item.name}}" class="{{if item.hidden}} hidden{{/if}}">
+                {{if i>0}}<div class="space-2"></div>{{/if}}
+                {{if item.type==='hidden'}}
+                <% if(!item.hiddenWhenNotExist || (typeof(item.value) === 'undefined' && _.result(data, item.name) || item.value)) { %>
+                <input type="hidden" name="{{item.name}}" value="{{typeof(item.value) === 'undefined' && _.result(data, item.name) || item.value}}" />
+                <% } %>
                 {{else}}
-                <label class="col-sm-3 control-label no-padding-right {{if (item.type === 'radio' || item.type === 'checkbox' || item.type === 'switch') && !item.buttonGroup}}no-padding-top{{/if}}" for="txt{{item.name}}">
-                    <span class="{{if item.required && hideRequiredMark !== true}}ace-form-item-required{{/if}}{{if colon === false || item.colon === false}} ace-form-item-no-colon{{/if}}">{{item.label}}</span>
-                </label>
-                <div class="col-sm-9 col-xs-12">
-                    <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
+                <div class="form-group">
+                    {{if layout === "vertical"}}
+                    <div class="plrw">
+                        <label for="txt{{item.name}}" class="control-label">
+                            <span class="{{if item.required && hideRequiredMark !== true}}ace-form-item-required{{/if}}">{{item.label}}</span>
+                        </label>
+                        <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
+                    </div>
+                    {{else}}
+                    <label class="col-sm-3 control-label no-padding-right {{if (item.type === 'radio' || item.type === 'checkbox' || item.type === 'switch') && !item.buttonGroup}}no-padding-top{{/if}}" for="txt{{item.name}}">
+                        <span class="{{if item.required && hideRequiredMark !== true}}ace-form-item-required{{/if}}{{if colon === false || item.colon === false}} ace-form-item-no-colon{{/if}}">{{item.label}}</span>
+                    </label>
+                    <div class="col-sm-9 col-xs-12">
+                        <%include('tpl-'+item.type+'4form',{"item": item, "data": data||{}})%>
+                    </div>
+                    {{/if}}
                 </div>
                 {{/if}}
-            </div>
+                </div>
             {{/if}}
-            </div>
             {{/each}}
         </form>
     </div>

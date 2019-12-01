@@ -744,3 +744,47 @@ input[type=checkbox].ace.ace-switch.green:checked + .lbl::before {
     border: 1px solid #ddd;
     font-size: 13px;
 }
+
+/*=========chosen===========*/
+.chosen-container-multi .chosen-choices,
+.chosen-container .chosen-drop {
+    border: 1px solid #D5D5D5!important;
+}
+
+.chosen-container .chosen-drop {
+    border-top: 0!important;
+}
+
+.chosen-container-multi .chosen-choices:hover{
+    border-color: #b5b5b5!important;
+}
+
+.chosen-container-multi .chosen-choices {
+    background-image: none!important;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice {
+    padding: 6px 22px 7px 9px!important;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+    top: 6px!important;
+}
+
+.tag-input-style+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+    top: 0!important;
+}
+
+.chosen-container-multi .chosen-choices li.search-field {
+    padding: 2px 0 3px 0!important;
+}
+
+.chosen-container .chosen-results li {
+    line-height: 24px!important;
+}
+
+.chosen-container .chosen-results li.highlighted {
+    background-color: #438EB9!important;
+    background-image: none!important;
+    color: #fff
+}

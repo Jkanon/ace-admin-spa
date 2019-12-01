@@ -24,6 +24,7 @@ require.config({
         "datatables.treeGrid": "dataTables.treeGrid",
         "layer": "../components/layer/dist/layer",
         "lodash": "../components/lodash/lodash",
+        "jquery.chosen": "../components/chosen/chosen.jquery.min",
         "jquery.inputmask": "../components/inputmask/dist/jquery.inputmask.bundle",
         "jquery.inputlimiter": "../components/jquery-inputlimiter/jquery-inputlimiter/jquery.inputlimiter.1.3.1",
         "jquery.validate.message-zh": "../components/jquery-validation/src/localization/messages_zh",
@@ -55,6 +56,9 @@ require.config({
         "jquery.validate.custom": {
             deps: ["jquery.validate.min"]
         },
+        "jquery.chosen": {
+            deps: ["css!../components/chosen/chosen.min"]
+        },
         "codemirror": {
             deps: ["css!../components/codemirror/5.42.0/lib/codemirror.min"]
         },
@@ -63,9 +67,8 @@ require.config({
         }
     }
 });
-template.defaults.imports._ = function(){
-    return _;
-};
+
+template.defaults.imports.JSON = JSON;
 template.defaults.imports.defaults = function(){
     for(var i = 0; i < arguments.length; i++) {
         if(typeof arguments[i] !== 'undefined') {
@@ -77,6 +80,7 @@ template.defaults.imports.defaults = function(){
 };
 
 define(['ace-elements', 'common'], function(ACE, common){
+    template.defaults.imports._ = _;
     template.defaults.imports._isUrl = common.isUrl;
 
     //通过requirejs引入时，ace.min.js中的这句话执行时ace.demo还未定义，因此这边手动重新执行一遍
@@ -119,6 +123,16 @@ define(['ace-elements', 'common'], function(ACE, common){
                 }
             })
         ;
+
+        $(window)
+            .off('resize.chosen')
+            .on('resize.chosen', function() {
+                $('.chosen-select').each(function() {
+                    var $this = $(this);
+                    var width = _.get($this.data("options"), "width", "66.66666667%");
+                    $this.next().css({ width: width });
+                });
+            }).trigger('resize.chosen');
     }
 
     //异步加载子页面
@@ -266,16 +280,21 @@ define(['ace-elements', 'common'], function(ACE, common){
         },
         /**
          * 提交数据（新增或者编辑数据）
+         * @param method
          * @param api
          * @param type
          * @param data
          * @param callback
          */
-        saveData: function(api, type, data, callback) {
-            if(type === 'add') {
-                common.post({ url: api["add"], data: data, success: callback });
+        saveData: function(method, api, type, data, callback) {
+            if (method) {
+                common[method]({ url: api.replace('{id}', data.id), data: data, success: callback });
             } else {
-                common.put({ url: api["edit"].replace('{id}', data.id), data: data, success: callback });
+                if(type === 'add') {
+                    common.post({ url: typeof api === "string" && api || api["add"], data: data, success: callback });
+                } else {
+                    common.put({ url: (typeof api === "string" && api || api["edit"]).replace('{id}', data.id), data: data, success: callback });
+                }
             }
         }
 
@@ -303,14 +322,14 @@ define(['ace-elements', 'common'], function(ACE, common){
         ,openFormDialog: function(options){
             var that = this;
             common.modal({
-                title: (options.type == 'add' && '新增' || '编辑') + options.title,
+                title: (options.type && (options.type === 'add' && '新增' || '编辑') || '') + options.title,
                 area: options.area || '400px',
                 offset: options.offset,
                 template: options.template,
                 success: options.success,
                 ok: function(layero, index){
                     var originData = this.form.serializeObject();
-                    that.saveData(options.api, options.type,
+                    that.saveData(options.method, options.api, options.type,
                         typeof options.format == 'function' && options.format(originData) || (originData),
                         function(ret){
                             layer.close(index);
