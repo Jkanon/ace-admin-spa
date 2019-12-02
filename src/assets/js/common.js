@@ -360,7 +360,8 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                             sc();
                         });
                     }
-                    var chosenSelect = $('.chosen-select');
+                    // 下拉框
+                    var chosenSelect = $('.chosen-select', form);
                     if (chosenSelect.length > 0) {
                         doneFlag++;
                         require(['jquery.chosen'], function (){
@@ -372,13 +373,29 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                                 no_results_text: "无匹配项",
                                 width: "66.66666667%"
                             };
-                            $('.chosen-select').each(function() {
+                            chosenSelect.each(function() {
                                 var $this = $(this);
                                 $this.chosen($.extend({}, defaultOptions, $this.data("options")));
                             });
                             sc();
                         });
                     }
+                    // 文件上传
+                    var fileInput = $("input[type=file]", form);
+                    if (fileInput.length > 0 ) {
+                        fileInput.ace_file_input({
+                            no_file:'未选择文件',
+                            btn_choose:'Choose',
+                            btn_change:'Change',
+                            droppable:false,
+                            onchange:null,
+                            thumbnail:false
+                        })
+                        // $('.js-file-input').ace_file_input('show_file_list', [
+                        //     {type: 'image', name: 'name of image', path: 'http://path/to/image/for/preview'}
+                        // ]);
+                    }
+                    // 数字框
                     var spinner = $(".js-spinner", form);
                     if (spinner && spinner.length > 0) {
                         doneFlag++;
