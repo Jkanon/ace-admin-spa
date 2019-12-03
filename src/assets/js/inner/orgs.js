@@ -51,7 +51,7 @@ define(["datatables", "common", "app"], function (datatable, common, APP) {
                         label: "机构类型",
                         name: "sex",
                         options: [
-                            {label: "公司", value: 1, "default": true}
+                            {label: "公司", value: 1, defaultValue: true}
                         ]
                     }],
                 data: data || {}

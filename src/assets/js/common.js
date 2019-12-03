@@ -385,8 +385,8 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                     if (fileInput.length > 0 ) {
                         fileInput.ace_file_input({
                             no_file:'未选择文件',
-                            btn_choose:'Choose',
-                            btn_change:'Change',
+                            btn_choose:'选择',
+                            btn_change:'更改',
                             droppable:false,
                             onchange:null,
                             thumbnail:false
@@ -399,7 +399,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                     var spinner = $(".js-spinner", form);
                     if (spinner && spinner.length > 0) {
                         doneFlag++;
-                        require(['fuelux.spinbox.min'], function () {
+                        require(['fuelux.spinbox'], function () {
                             $.each(spinner, function (i, o) {
                                 var t = $(o);
                                 t.ace_spinner({

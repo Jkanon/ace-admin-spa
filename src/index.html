@@ -253,7 +253,7 @@
             <b class="arrow fa fa-angle-down"></b>
         </a>
         {{else}}
-        <a href="{{if topMenu.href}}{{topMenu.href}}{{/if}}" {{if _isUrl(topMenu.href)}}target="_blank"{{/if}}>
+        <a href="{{if topMenu.href}}{{topMenu.href}}{{else}}javascript:;{{/if}}" {{if _isUrl(topMenu.href)}}target="_blank"{{/if}}>
             <i class="menu-icon {{topMenu.icon}}"></i>
             <span class="menu-text"> {{topMenu.name}} </span>
         </a>
@@ -280,7 +280,7 @@
             <a href="#!home">Home</a>
         </li>
         {{each list menu i}}
-        <li {{if menu.length=== i }}class="active"{{/if}}>
+        <li {{if menu.length === i }}class="active"{{/if}}>
         <a href="{{menu.href}}">{{menu.name}}</a>
         </li>
         {{/each}}

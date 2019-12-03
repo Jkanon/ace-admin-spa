@@ -132,7 +132,7 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                                 label: '性别',
                                 name: 'sex',
                                 options: [
-                                    {label: '男', value: 1, "default": true},
+                                    {label: '男', value: 1, defaultValue: true},
                                     {label: '女', value: 2}
                                 ]
                             }, {

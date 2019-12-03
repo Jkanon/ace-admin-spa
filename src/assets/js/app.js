@@ -13,17 +13,20 @@ require.config({
         }
     },
     paths : {
-        "jquery": isLTIE8 ? "../components/jquery.1x/dist/jquery.min" : "../components/jquery/dist/jquery.min",
-        "jquery-mobile": "jquery.mobile.custom.min",
-        "jquery.spring-friendly": "jquery.spring-friendly.min",
-        "bootstrap": "../components/bootstrap/dist/js/bootstrap.min",
         "ace": "ace.min",
         "ace-elements": "ace-elements.min",
+        "autosize": "../components/autosize/dist/autosize.min",
+        "bootstrap": "../components/bootstrap/dist/js/bootstrap.min",
+        "codemirror": "../components/codemirror/lib/codemirror",
+        "codemirror/shell": "../components/codemirror/mode/shell/shell",
         "datatables.net": "../components/datatables.net/js/jquery.dataTables.min",
         "datatables.net-bs": "../components/datatables.net-bs/js/dataTables.bootstrap.min",
         "datatables.treeGrid": "dataTables.treeGrid",
-        "layer": "../components/layer/dist/layer",
-        "lodash": "../components/lodash/lodash",
+        "dropzone": "../components/dropzone/dist/min/dropzone-amd-module.min",
+        "fuelux.spinbox": "../components/fuelux/js/spinbox",
+        "jquery": isLTIE8 ? "../components/jquery.1x/dist/jquery.min" : "../components/jquery/dist/jquery.min",
+        "jquery-mobile": "jquery.mobile.custom.min",
+        "jquery.spring-friendly": "jquery.spring-friendly.min",
         "jquery.chosen": "../components/chosen/chosen.jquery.min",
         "jquery.inputmask": "../components/inputmask/dist/jquery.inputmask.bundle",
         "jquery.inputlimiter": "../components/jquery-inputlimiter/jquery-inputlimiter/jquery.inputlimiter.1.3.1",
@@ -31,11 +34,9 @@ require.config({
         "jquery.validate.min": "../components/jquery-validation/dist/jquery.validate.min",
         "jquery.additional-methods": "../components/jquery-validation/dist/additional-methods.min",
         "jquery.validate.custom": "custom.jquery.validate",
-        "autosize": "../components/autosize/dist/autosize.min",
-        "dropzone": "../components/dropzone/dist/min/dropzone-amd-module.min",
-        "zTree": "../components/zTree/js/jquery.ztree.all.min",
-        "codemirror": "../components/codemirror/5.42.0/lib/codemirror.min",
-        "shell": "../components/codemirror/5.42.0/mode/shell/shell"
+        "layer": "../components/layer/dist/layer",
+        "lodash": "../components/lodash/lodash",
+        "zTree": "../components/zTree/js/jquery.ztree.all.min"
     },
     shim: {
         "bootstrap": {
@@ -60,14 +61,15 @@ require.config({
             deps: ["css!../components/chosen/chosen.min"]
         },
         "codemirror": {
-            deps: ["css!../components/codemirror/5.42.0/lib/codemirror.min"]
+            deps: ["css!../components/codemirror/lib/codemirror"]
         },
-        "shell": {
+        "codemirror/shell": {
             deps: ["codemirror"]
         }
     }
 });
 
+template.defaults.imports.console = console;
 template.defaults.imports.JSON = JSON;
 template.defaults.imports.defaults = function(){
     for(var i = 0; i < arguments.length; i++) {
@@ -156,9 +158,9 @@ define(['ace-elements', 'common'], function(ACE, common){
                     });
                 }
             } else if (xhr.status === 404) {
-                $('#page-content').html(template('tpl404', {}));
+                $(this).html(template('tpl404', {}));
             } else if (xhr.status === 500) {
-                $('#page-content').html(template('tpl500', {}));
+                $(this).html(template('tpl500', {}));
             }
         });
     }
@@ -323,19 +325,23 @@ define(['ace-elements', 'common'], function(ACE, common){
             var that = this;
             common.modal({
                 title: (options.type && (options.type === 'add' && '新增' || '编辑') || '') + options.title,
-                area: options.area || '400px',
+                area: options.area || '450px',
                 offset: options.offset,
                 template: options.template,
                 success: options.success,
                 ok: function(layero, index){
-                    var originData = this.form.serializeObject();
-                    that.saveData(options.method, options.api, options.type,
-                        typeof options.format == 'function' && options.format(originData) || (originData),
-                        function(ret){
-                            layer.close(index);
-                            message.success("保存成功");
-                            typeof options.callback == 'function' && options.callback(ret);
-                    });
+                    if (options.onSubmit) {
+                        options.onSubmit.call(this, layero, index);
+                    } else {
+                        var originData = this.form.serializeObject();
+                        that.saveData(options.method, options.api, options.type,
+                            typeof options.format == 'function' && options.format(originData) || (originData),
+                            function(ret){
+                                layer.close(index);
+                                message.success("保存成功");
+                                typeof options.callback == 'function' && options.callback(ret);
+                            });
+                    }
                 },
                 reset: options.reset,
                 rules: options.rules,
