@@ -12,7 +12,6 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
         }
         , init: function () {
             this.initMainTable();
-            this.initEventListener();
         }
         , initMainTable: function () {
             var self = this;
@@ -56,7 +55,7 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                             }
                         }]}
                 ]]
-            });
+            }, self.initEventListener.bind(self));
         },
         initEventListener: function () {
             var self = this;

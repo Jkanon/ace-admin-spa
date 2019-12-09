@@ -196,8 +196,15 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         var that = this;
         that.index = ++table.index;
         that.config = $.extend({}, that.config, table.config, options);
+        var requireComponents = [];
         if (options.treeGrid) {
-            require(["datatables.treeGrid"], function() {
+            requireComponents.push("datatables.treeGrid");
+        }
+        if (options.responsive !== false) {
+            requireComponents.push("datatables.responsive");
+        }
+        if (requireComponents.length > 0) {
+            require(requireComponents, function() {
                 that.render();
                 callback && callback();
             });
@@ -522,6 +529,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>"
             )
+            ,responsive: typeof options.responsive === 'undefined' ? true : options.responsive
             ,treeGrid: options.treeGrid
             ,order: order
             ,columns: columnsDef
@@ -573,7 +581,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                         .off('input', 'input')
                         .on(ace.click_event, '.paginate_button', jumpAction)
                         .on('keypress', 'input', function(e) {
-                            if (e.which == 13) {
+                            if (e.which === 13) {
                                 jumpAction();
                             }
                         })

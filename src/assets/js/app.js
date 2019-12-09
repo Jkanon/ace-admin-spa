@@ -22,6 +22,8 @@ require.config({
         "datatables.net": "../components/datatables.net/js/jquery.dataTables.min",
         "datatables.net-bs": "../components/datatables.net-bs/js/dataTables.bootstrap.min",
         "datatables.treeGrid": "datatables.treeGrid",
+        "datatables.net-responsive": "../components/datatables.net-responsive/js/dataTables.responsive.min",
+        "datatables.responsive": "../components/datatables.net-responsive-bs/js/responsive.bootstrap.min",
         "dropzone": "../components/dropzone/dist/min/dropzone-amd-module.min",
         "fuelux.spinbox": "../components/fuelux/js/spinbox",
         "jquery": isLTIE8 ? "../components/jquery.1x/dist/jquery.min" : "../components/jquery/dist/jquery.min",
@@ -50,6 +52,9 @@ require.config({
         },
         "datatables.net": {
             deps: ['jquery.spring-friendly']
+        },
+        "datatables.responsive": {
+            deps: ["css!../components/datatables.net-responsive-bs/css/responsive.bootstrap.min"]
         },
         "jquery.validate.message-zh": {
             deps: ["jquery.validate.min"]
