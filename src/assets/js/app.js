@@ -21,7 +21,7 @@ require.config({
         "codemirror/shell": "../components/codemirror/mode/shell/shell",
         "datatables.net": "../components/datatables.net/js/jquery.dataTables.min",
         "datatables.net-bs": "../components/datatables.net-bs/js/dataTables.bootstrap.min",
-        "datatables.treeGrid": "dataTables.treeGrid",
+        "datatables.treeGrid": "datatables.treeGrid",
         "dropzone": "../components/dropzone/dist/min/dropzone-amd-module.min",
         "fuelux.spinbox": "../components/fuelux/js/spinbox",
         "jquery": isLTIE8 ? "../components/jquery.1x/dist/jquery.min" : "../components/jquery/dist/jquery.min",
@@ -333,7 +333,35 @@ define(['ace-elements', 'common'], function(ACE, common){
                     if (options.onSubmit) {
                         options.onSubmit.call(this, layero, index);
                     } else {
-                        var originData = this.form.serializeObject();
+                        var originData = null;
+                        var fileInputs = $('input[type=file]', this.form);
+                        if (fileInputs.length > 0) {
+                            //混合文件
+                            if( "FormData" in window ) {
+                                var formDataObject = new FormData();
+                                //serialize our form (which excludes file inputs)
+                                $.each(this.form.serializeArray1(), function(i, item) {
+                                    //add them one by one to our FormData
+                                    formDataObject.append(item.name, item.value);
+                                });
+                                //and then add files
+                                fileInputs.each(function(){
+                                    var fieldName = $(this).attr('name');
+                                    //for fields with "multiple" file support, field name should be something like `myfile[]`
+                                    var files = $(this).data('ace_input_files');
+                                    if(files && files.length > 0) {
+                                        for(var f = 0; f < files.length; f++) {
+                                            formDataObject.append(fieldName, files[f]);
+                                        }
+                                    }
+                                });
+                                originData = formDataObject;
+                            } else {
+
+                            }
+                        } else {
+                            originData = this.form.serializeObject();
+                        }
                         that.saveData(options.method, options.api, options.type,
                             typeof options.format == 'function' && options.format(originData) || (originData),
                             function(ret){

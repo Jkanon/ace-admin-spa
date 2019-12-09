@@ -14,14 +14,14 @@ define(["datatables", "common", "app"], function (datatable, common, APP) {
                 elem: "#table-menus",
                 data: self.data,
                 cols: [[
-                    {field: "", render: function (data, type, item) {
-                            if (item.children && item.children.length>0) {
-                                return '<span class="blue bigger-140"><i class="fa fa-plus-square"></i></span>';
-                            }
-                            return '';
-                        }, className: 'treegrid-control', target: 0},
                     {type: "checkbox"},
-                    {field: "name", title: "名称"},
+                    {field: "name", title: "名称", render: function (data, type, item) {
+                            if (item.children && item.children.length>0) {
+                                return '<span class="blue bigger-140"><i class="fa fa-plus-square"></i></span>' + data;
+                            }
+                            return data;
+                        }, className: 'treegrid-control', target: 0
+                    },
                     {field: "menuType", title: "类型"},
                     {field: "icon", title: "图标", render: function(data) {
                         if (data) {

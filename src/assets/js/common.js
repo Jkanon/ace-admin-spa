@@ -254,6 +254,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                     ajaxOption.contentType = "application/json";
                 }
             } else {
+                // Form Data
                 ajaxOption.data = options.data;
                 ajaxOption.contentType = false;
                 ajaxOption.processData = false;

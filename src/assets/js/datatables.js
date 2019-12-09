@@ -303,9 +303,10 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         var othis = options.elem
             ,reHead = template.render(TPL_HEADER, options);
 
-        //othis.addClass('layui-table').width('100%');
+        if (options.title) {
+            othis.before("<div class='table-header'>" + options.title + "</div>");
+        }
         othis.append(reHead);
-        //othis.append(TPL_BODY);
 
         that.renderData();
         that.events();
@@ -541,6 +542,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                 ].join('');
                 var pageInfo = options.api.page.info();
                 that.pagination = $('.dataTables_paginate', options.api.table().container());
+                options.api.table().footer("test");
                 that.pagination
                     .wrapInner($('<div>', {'class': 'pagination'}))
                     .append(template.render(_pageJump, pageInfo));

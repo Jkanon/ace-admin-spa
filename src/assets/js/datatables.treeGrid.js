@@ -69,7 +69,6 @@
     $.extend(TreeGrid.prototype, {
         fnConstruct: function (oInit) {
             this.s = $.extend(true, this.s, TreeGrid.defaults, oInit);
-
             var settings = this.s.dt;
             var select = settings._select;
             var dataTable = $(settings.nTable).dataTable().api();
@@ -78,7 +77,6 @@
 
             var expandIcon = $(this.s.expandIcon);
             var collapseIcon = $(this.s.collapseIcon);
-
             var resetTreeGridRows = function (trId) {
                 var subRows = treeGridRows[trId];
                 if (subRows && subRows.length) {
@@ -368,6 +366,7 @@
     }
 
     TreeGrid.defaults = {
+        childrenColumnName: "children",
         indentSize: 12,
         indentColumnIndex: undefined,
         expandRowByClick: false,

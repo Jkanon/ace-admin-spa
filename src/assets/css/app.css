@@ -513,6 +513,34 @@ input[type=checkbox].ace.ace-switch.green:checked + .lbl::before {
     border-color: #5FB878;
 }
 
+input[type=checkbox].ace.ace-switch.red:checked + .lbl::before {
+    background-color: #CA5952;
+    border-color: #CA5952;
+}
+
+input[type=checkbox].ace.ace-switch.orange:checked + .lbl::before {
+    background-color: #F2BB46;
+    border-color: #F2BB46;
+}
+
+fieldset[disabled] input[type=checkbox].ace,
+fieldset[disabled] input[type=radio].ace,
+input[type=checkbox].disabled.ace,
+input[type=checkbox][disabled].ace,
+input[type=radio].disabled.ace,
+input[type=radio][disabled].ace {
+    cursor: not-allowed;
+}
+
+fieldset[disabled] input[type=checkbox].ace+.lbl::before,
+fieldset[disabled] input[type=radio].ace+.lbl::before,
+input[type=checkbox].disabled.ace+.lbl::before,
+input[type=radio].disabled.ace+.lbl::before,
+input[type=checkbox][disabled].ace+.lbl::before,
+input[type=radio][disabled].ace+.lbl::before {
+    cursor: not-allowed;
+}
+
 /*==================zTree===================*/
 .ztree {
     margin: auto;

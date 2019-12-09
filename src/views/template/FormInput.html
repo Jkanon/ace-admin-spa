@@ -28,13 +28,13 @@
 <!-- switch开关 -->
 <script id="tpl-switch4form" type="text/html">
     <label class="inline">
-        <input type="checkbox" name="{{item.name}}" id="txt{{item.name}}" class="ace ace-switch {{if item.switchtype}}ace-switch-{{item.switchtype}}{{/if}} {{item.color}} {{item.className}}" {{if item.checkedValue===item.value}}checked{{/if}}{{if item.required}} required{{/if}}>
+        <input type="checkbox" name="{{item.name}}" id="txt{{item.name}}" class="ace ace-switch {{item.className}}{{if item.readonly}} disabled{{/if}}" value="{{item.checkedValue}}" {{if item.checkedValue===item.value || (typeof item.value === 'undefined' && item.defaultChecked)}}checked{{/if}}{{if item.required}} required{{/if}}{{if item.disabled}} disabled{{/if}}>
         <span class="lbl middle"{{if item.lbl}} data-lbl="{{if typeof item.lbl === 'string'}}{{item.lbl}}{{else}}{{item.lbl[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.lbl[1]}}{{/if}}"{{/if}}></span>
     </label>
 </script>
 <!-- number -->
 <script id="tpl-number4form" type="text/html">
-    <input type="text" id="txt{{item.name}}" name="{{item.name}}" class="js-spinner {{item.className}}"{{if item.min}} min="{{item.min}}"{{/if}}{{if item.max}} max="{{item.max}}"{{/if}}{{if item.step}} max="{{item.step}}"{{/if}} value="{{item.value}}"{{/if}}{{if item.required}} required{{/if}}/>
+    <input type="text" id="txt{{item.name}}" name="{{item.name}}" class="js-spinner {{item.className}}"{{if item.min}} min="{{item.min}}"{{/if}}{{if item.max}} max="{{item.max}}"{{/if}}{{if item.step}} step="{{item.step}}"{{/if}} value="{{item.value}}"{{if item.required}} required{{/if}}{{if item.disabled}} disabled{{/if}}{{if item.readonly}} readonly{{/if}}/>
 </script>
 <!-- 输入框 -->
 <script id="tpl-input4form" type="text/html">
@@ -43,7 +43,7 @@
         <!-- 带图标输入框 -->
         <span class="input-icon {{if item.suffix}}input-icon-right{{/if}}">
             {{if item.prefix}}<i class="ace-icon {{item.prefix}}"></i>{{/if}}
-            <input class="{{if item.size}}input-{{item.size}}{{/if}} {{item.className}}"{{if item.style}} style="{{item.style}}"{{/if}} {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}" autocomplete="off"{{if item.required}} required{{/if}}>
+            <input class="{{if item.size}}input-{{item.size}}{{/if}} {{item.className}}"{{if item.style}} style="{{item.style}}"{{/if}} {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}" value="{{item.value}}" autocomplete="off"{{if item.required}} required{{/if}}{{if item.disabled}} disabled{{/if}}{{if item.readonly}} readonly{{/if}}>
             {{if item.suffix}}<i class="ace-icon {{item.suffix}}"></i>{{/if}}
         </span>
         {{else if item.addonBefore || item.addonAfter}}
@@ -57,7 +57,7 @@
                 {{/if}}
                 </span>
                 {{/if}}
-                <input class="{{if item.size}}input-{{item.size}}{{/if}} {{item.className}}"{{if item.style}} style="{{item.style}}"{{/if}} {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}"  value="{{item.value}}" autocomplete="off"{{if item.required}} required{{/if}}>
+                <input class="{{if item.size}}input-{{item.size}}{{/if}} {{item.className}}"{{if item.style}} style="{{item.style}}"{{/if}} {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}}type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}"  value="{{item.value}}" autocomplete="off"{{if item.required}} required{{/if}}{{if item.disabled}} disabled{{/if}}{{if item.readonly}} readonly{{/if}}>
                 {{if item.addonAfter}}
                 <span class="input-group-addon">
                 {{if item.addonAfter.indexOf('fa') !== -1 || item.addonAfter.indexOf('glyphicon') !== -1}}
@@ -70,13 +70,14 @@
             </div>
         {{else}}
         <!-- 普通输入框 -->
-        <input type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}" {{if item.maxlength}}maxlength="{{item.maxlength}}"{{/if}} class="col-xs-10 col-sm-8{{if item.size}} input-{{item.size}}{{/if}} {{item.className}}"{{if item.style}} style="{{item.style}}"{{/if}} {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}} value="{{item.value}}" autocomplete="off"{{if item.required}} required{{/if}}/>
+        <input type="{{item.subType||'text'}}" id="txt{{item.name}}" name="{{item.name}}" placeholder="{{item.placeholder}}" {{if item.maxlength}}maxlength="{{item.maxlength}}"{{/if}} class="col-xs-10 col-sm-8{{if item.size}} input-{{item.size}}{{/if}} {{item.className}}"{{if item.style}} style="{{item.style}}"{{/if}} {{if item.inputMask}}data-inputmask="{{item.inputMask}}" {{/if}} value="{{item.value}}" autocomplete="off"{{if item.required}} required{{/if}}{{if item.disabled}} disabled{{/if}}{{if item.readonly}} readonly{{/if}}/>
         {{/if}}
     </div>
 </script>
 <!-- 文件上传框 -->
 <script id="tpl-upload4form" type="text/html">
-    <input id="txt{{item.name}}" type="file" class="{{item.className}}" {{item.multiple ? "multiple" : ""}} {{item.required ? "required" : ""}}/>
+    <% item.options = _.merge({ style: item.multiple ? "well" : undefined }, item.options) %>
+    <input type="file" id="txt{{item.name}}" name="{{item.name}}" class="{{item.className}}" {{item.multiple ? "multiple" : ""}} {{item.required ? "required" : ""}} {{each item.options val attr}}data-{{attr}}="{{val}}"{{/each}}/>
 </script>
 <!-- 文本域 -->
 <script id="tpl-textarea4form" type="text/html">
@@ -114,7 +115,7 @@
         {{/each}}
         </select>
     {{else}}
-        <select class="input-medium {{item.className}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}>
+        <select class="form-control input-medium {{item.className}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}>
         {{if item.hasEmpty}}<option value="">{{item.emptyText}}</option>{{/if}}
         {{each item.options it i}}
             <%include('tpl-option4form',{"item": item, "options": item.options, "key": i, "value": it})%>
