@@ -19,7 +19,6 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
             self.mainTable = datatable.render({
                 elem: '#table-users',
                 url: self.API.queryPage,
-                title: "Results for \"Latest Registered Domains\"",
                 cols: [[
                     {type: 'checkbox'},
                     {field: 'username', title: '账号'},

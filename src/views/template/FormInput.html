@@ -115,7 +115,7 @@
         {{/each}}
         </select>
     {{else}}
-        <select class="form-control input-medium {{item.className}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}>
+        <select class="input-medium {{item.className}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}>
         {{if item.hasEmpty}}<option value="">{{item.emptyText}}</option>{{/if}}
         {{each item.options it i}}
             <%include('tpl-option4form',{"item": item, "options": item.options, "key": i, "value": it})%>
@@ -126,10 +126,66 @@
 </script>
 <!-- 自定义html -->
 <script id="tpl-custom4form" type="text/html">
-    {{if item.raw !== false}}
-        {{@item.html}}
+    <%
+        item.children = item.children || [];
+        var _data = {
+            item: item,
+            data: data,
+            slot: {}
+        };
+        for (var i = 0; i < item.children.length; i++) {
+            var childItem = item.children[i];
+            var key = childItem.slot || childItem.name || i;
+            _data.slot[key] = template("tpl-formItem", _.assign({}, $data, { item: childItem, i: i }));
+        }
+    %>
+    {{@template.render(item.html, _data)}}
+</script>
+<!-- 表单模版 -->
+<script id="tpl-formItem" type="text/html">
+    <% data = data || {}; %>
+    {{if item.type === 'custom'}}
+    <%include('tpl-'+item.type+'4form',{"item": item, "data": data})%>
     {{else}}
-        {{item.html}}
+    <!-- 合并默认设置 -->
+    <% item = _.merge({ value: item.defaultValue }, {
+    labelCol: { xs: 12, sm: 3 },
+    wrapperCol: { xs: 12 },
+    value: _.result(data, item.name),
+    colon: colon !== false,
+    hideRequiredMark: hideRequiredMark === true
+    }, item); %>
+    <div id="formGroup-{{item.name}}" class="{{if item.hidden}} hidden{{/if}}  col-xs-{{item.wrapperCol.xs}} {{if item.wrapperCol.sm}}col-sm-{{item.wrapperCol.sm}}{{/if}}">
+        {{if item.type==='hidden'}}
+        <% if(!item.hiddenWhenNotExist || item.value) { %>
+        <input type="hidden" name="{{item.name}}" value="{{item.value}}" />
+        <% } %>
+        {{else}}
+        <div class="form-group">
+            {{if layout === "vertical"}}
+            <div class="plrw">
+                <label for="txt{{item.name}}" class="control-label">
+                    <span class="{{if item.required && hideRequiredMark !== true}}ace-form-item-required{{/if}}">{{item.label}}</span>
+                </label>
+                <%include('tpl-'+item.type+'4form',{"item": item, "data": data})%>
+            </div>
+            {{else}}
+            {{if typeof item.label !== 'undefined'}}
+            <label class="col-sm-{{item.labelCol.sm}} col-xs-{{item.labelCol.xs}} control-label no-padding-right {{if (item.type === 'radio' || item.type === 'checkbox' || item.type === 'switch') && !item.buttonGroup}}no-padding-top{{/if}}" for="txt{{item.name}}">
+                <span class="{{if item.required && item.hideRequiredMark !== true}}ace-form-item-required{{/if}}{{if item.colon === false}} ace-form-item-no-colon{{/if}}">{{item.label}}</span>
+            </label>
+            <div class="col-sm-{{item.labelCol.sm === 12 ? 12 : (12 - item.labelCol.sm)}} col-xs-{{item.labelCol.xs === 12 ? 12 : (12 - item.labelCol.xs)}}">
+                <%include('tpl-'+item.type+'4form',{"item": item, "data": data})%>
+            </div>
+            {{else}}
+            <div>
+                <%include('tpl-'+item.type+'4form',{"item": item, "data": data})%>
+            </div>
+            {{/if}}
+            {{/if}}
+        </div>
+        {{/if}}
+    </div>
     {{/if}}
 </script>
 <!-- 表单模版 -->
@@ -137,51 +193,7 @@
     <div style="padding: 15px 20px 0 20px;">
         <form class="form-{{layout||'horizontal'}} clearfix" role="form">
             {{each items item i}}
-            <% data = data || {}; %>
-            {{if item.type === 'custom'}}
-                <%include('tpl-'+item.type+'4form',{"item": item, "data": data})%>
-            {{else}}
-            <!-- 合并默认设置 -->
-            <% item = _.merge({ value: item.defaultValue }, {
-                labelCol: { xs: 12, sm: 3 },
-                wrapperCol: { xs: 12 },
-                value: _.result(data, item.name),
-                colon: colon !== false,
-                hideRequiredMark: hideRequiredMark === true
-            }, item); %>
-            <div id="formGroup-{{item.name}}" class="{{if item.hidden}} hidden{{/if}}  col-xs-{{item.wrapperCol.xs}} {{if item.wrapperCol.sm}}col-sm-{{item.wrapperCol.sm}}{{/if}}">
-                {{if i>0}}<div class="space-2"></div>{{/if}}
-                {{if item.type==='hidden'}}
-                <% if(!item.hiddenWhenNotExist || item.value) { %>
-                <input type="hidden" name="{{item.name}}" value="{{item.value}}" />
-                <% } %>
-                {{else}}
-                <div class="form-group">
-                    {{if layout === "vertical"}}
-                    <div class="plrw">
-                        <label for="txt{{item.name}}" class="control-label">
-                            <span class="{{if item.required && hideRequiredMark !== true}}ace-form-item-required{{/if}}">{{item.label}}</span>
-                        </label>
-                        <%include('tpl-'+item.type+'4form',{"item": item, "data": data})%>
-                    </div>
-                    {{else}}
-                    {{if typeof item.label !== 'undefined'}}
-                    <label class="col-sm-{{item.labelCol.sm}} col-xs-{{item.labelCol.xs}} control-label no-padding-right {{if (item.type === 'radio' || item.type === 'checkbox' || item.type === 'switch') && !item.buttonGroup}}no-padding-top{{/if}}" for="txt{{item.name}}">
-                        <span class="{{if item.required && item.hideRequiredMark !== true}}ace-form-item-required{{/if}}{{if item.colon === false}} ace-form-item-no-colon{{/if}}">{{item.label}}</span>
-                    </label>
-                    <div class="col-sm-{{item.labelCol.sm === 12 ? 12 : (12 - item.labelCol.sm)}} col-xs-{{item.labelCol.xs === 12 ? 12 : (12 - item.labelCol.xs)}}">
-                        <%include('tpl-'+item.type+'4form',{"item": item, "data": data})%>
-                    </div>
-                    {{else}}
-                    <div>
-                        <%include('tpl-'+item.type+'4form',{"item": item, "data": data})%>
-                    </div>
-                    {{/if}}
-                    {{/if}}
-                </div>
-                {{/if}}
-            </div>
-            {{/if}}
+                <%include('tpl-formItem',_.merge({}, $data, { item: item, i: i}))%>
             {{/each}}
         </form>
     </div>

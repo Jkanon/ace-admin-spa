@@ -366,7 +366,6 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                     if (chosenSelect.length > 0) {
                         doneFlag++;
                         require(['jquery.chosen'], function (){
-                            doneFlag--;
                             var defaultOptions = {
                                 allow_single_deselect:true,
                                 placeholder_text_multiple: "请选择",

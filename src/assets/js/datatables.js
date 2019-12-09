@@ -542,7 +542,6 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                 ].join('');
                 var pageInfo = options.api.page.info();
                 that.pagination = $('.dataTables_paginate', options.api.table().container());
-                options.api.table().footer("test");
                 that.pagination
                     .wrapInner($('<div>', {'class': 'pagination'}))
                     .append(template.render(_pageJump, pageInfo));
@@ -586,8 +585,6 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                 }
                 that.syncCheckAll();
                 //$(this).closest('.layui-form').attr('lay-filter', 'LAY-table-'+that.index);
-                var tooltips = $('[data-rel=tooltip]', options.elem);
-                tooltips && tooltips.tooltip();
                 if(options.drawCallback && typeof options.drawCallback === "function") {
                     options.drawCallback.call(this, settings);
                 }

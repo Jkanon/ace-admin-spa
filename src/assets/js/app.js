@@ -135,6 +135,11 @@ define(['ace-elements', 'common'], function(ACE, common){
                     $this.next().css({ width: width });
                 });
             }).trigger('resize.chosen');
+
+        $('body').tooltip({
+            selector: "[data-rel=tooltip]",
+            trigger: "hover"
+        });
     }
 
     //异步加载子页面
