@@ -91,7 +91,7 @@
         _optionLabel = _.isArray(options) ? it[item.labelProp] : (item.labelProp === 'label' ? key : value),
         _itemValue = defaults(item.value, _.result(data, item.name), (it.defaultValue ? _optionValue : undefined), item.defaultValue);
     %>
-    <option value="{{_optionValue}}" {{_itemValue===_optionValue ? "selected" : ""}} {{it.disabled ? "disabled" : ""}}>{{_optionLabel}}</option>
+    <option value="{{_optionValue}}" {{(multiple ? (_itemValue && _itemValue.indexOf(_optionValue) !== -1): _itemValue===_optionValue) ? "selected" : ""}} {{it.disabled ? "disabled" : ""}}>{{_optionLabel}}</option>
 </script>
 <script id="tpl-select4form" type="text/html">
     <div class="">
@@ -106,11 +106,11 @@
             {{if it.group}}
             <optgroup label="{{it.label}}">
                 {{each it.value groupOption j}}
-                <%include('tpl-option4form',{"item": item, "options": it.value, "key": j, "value": groupOption})%>
+                <%include('tpl-option4form',{"item": item, "options": it.value, "key": j, "value": groupOption, "multiple": true})%>
                 {{/each}}
             </optgroup>
             {{else}}
-            <%include('tpl-option4form',{"item": item, "options": item.options, "key": i, "value": it})%>
+            <%include('tpl-option4form',{"item": item, "options": item.options, "key": i, "value": it, "multiple": true})%>
             {{/if}}
         {{/each}}
         </select>
