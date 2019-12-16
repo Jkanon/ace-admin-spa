@@ -14,6 +14,7 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
     var rcheckableType = (/^(?:checkbox|radio)$/i);
     var rtagName = (/<([\w:-]+)/);
     var rscriptType = (/^$|\/(?:java|ecma)script/i);
+    var rArrayName = /^(.+)\[(\d+)\]$/;
     (function ($) {
         $.fn.extend({
                 serializeArray1: function () {
@@ -69,12 +70,27 @@ define(['jquery', 'lodash', 'layer'], function ($, _) {
                                 } else {
                                     obj[e] = value || '';
                                 }
+                                obj = o[e];
                             } else {
-                                if (!obj[e]) {
-                                    obj[e] = {};
+                                var idx = rArrayName.exec(e);
+                                if (idx == null) {
+                                    if (!obj[e]) {
+                                        obj[e] = {};
+                                    }
+                                    obj = o[e];
+                                } else {
+                                    if (!obj[idx[1]]) {
+                                        obj[idx[1]] = [];
+                                    }
+                                    if (obj[idx[1]].length < idx[2]) {
+                                        obj[idx[1]].length = idx[2];
+                                    }
+                                    if (obj[idx[1]][idx[2]] === undefined) {
+                                        obj[idx[1]][idx[2]] = {};
+                                    }
+                                    obj = obj[idx[1]][idx[2]];
                                 }
                             }
-                            obj = o[e];
                         });
                     });
                     return o;
