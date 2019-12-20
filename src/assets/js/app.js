@@ -38,6 +38,7 @@ require.config({
         "jquery.validate.custom": "custom.jquery.validate",
         "layer": "../components/layer/dist/layer",
         "lodash": "../components/lodash/lodash",
+        "moments": "../components/moment/min/moment.min",
         "zTree": "../components/zTree/js/jquery.ztree.all.min"
     },
     shim: {
@@ -61,9 +62,6 @@ require.config({
         },
         "jquery.validate.custom": {
             deps: ["jquery.validate.min"]
-        },
-        "jquery.chosen": {
-            deps: ["css!../components/chosen/chosen.min"]
         },
         "codemirror": {
             deps: ["css!../components/codemirror/lib/codemirror"]
@@ -373,7 +371,7 @@ define(['ace-elements', 'common'], function(ACE, common){
                             originData = this.form.serializeObject();
                         }
                         that.saveData(options.method, options.api, options.type,
-                            typeof options.format == 'function' && options.format(originData) || (originData),
+                            typeof options.formatter == 'function' && options.formatter(originData) || (originData),
                             function(ret){
                                 layer.close(index);
                                 message.success("保存成功");

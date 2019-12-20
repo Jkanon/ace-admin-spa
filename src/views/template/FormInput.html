@@ -87,11 +87,11 @@
 </script>
 <!-- 下拉框 -->
 <script id="tpl-option4form" type="text/html">
-    <% var _optionValue = _.isArray(options) ? it[item.valueProp] : (item.valueProp === 'value' ? value : key),
-        _optionLabel = _.isArray(options) ? it[item.labelProp] : (item.labelProp === 'label' ? key : value),
-        _itemValue = defaults(item.value, _.result(data, item.name), (it.defaultValue ? _optionValue : undefined), item.defaultValue);
+    <% var _optionValue = _.isArray(options) ? value[item.valueProp] : (item.valueProp === 'value' ? value : key),
+        _optionLabel = _.isArray(options) ? value[item.labelProp] : (item.labelProp === 'label' ? key : value),
+        _itemValue = defaults(item.value, _.result(data, item.name), (value.defaultValue ? _optionValue : undefined), item.defaultValue);
     %>
-    <option value="{{_optionValue}}" {{(multiple ? (_itemValue && _itemValue.indexOf(_optionValue) !== -1): _itemValue===_optionValue) ? "selected" : ""}} {{it.disabled ? "disabled" : ""}}>{{_optionLabel}}</option>
+    <option value="{{_optionValue}}" {{(multiple ? (_itemValue && _itemValue.indexOf(_optionValue) !== -1): _itemValue===_optionValue) ? "selected" : ""}} {{value.disabled ? "disabled" : ""}}>{{_optionLabel}}</option>
 </script>
 <script id="tpl-select4form" type="text/html">
     <div class="">
@@ -99,29 +99,22 @@
         emptyText: "请选择",
         valueProp: _.isArray(item.options) ? "value" : "label",
         labelProp: _.isArray(item.options) ? "label" : "value"
-    }, item); %>
-    {{if item.multiple}}
-        <select multiple data-placeholder="{{item.emptyText}}" class="chosen-select  {{item.className}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}{{if item.settings}} data-options='{{JSON.stringify(item.settings)}}'{{/if}}>
+    }, item, { chosen: item.multiple || (item.className && item.className.split(" ").indexOf("chosen-select") !== -1) }); %>
+        <select {{item.multiple ? "multiple" : ""}} data-placeholder="{{item.emptyText}}" class="{{item.chosen ? "chosen-select" : ""}} form-control {{item.className}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}{{if item.settings}} data-options='{{JSON.stringify(item.settings)}}'{{/if}}>
+        {{if !item.chosen &&item.hasEmpty}}<option value="">{{item.emptyText}}</option>{{/if}}
+        {{if item.chosen && !item.multiple}}<option value=""></option>{{/if}}
         {{each item.options it i}}
             {{if it.group}}
             <optgroup label="{{it.label}}">
                 {{each it.value groupOption j}}
-                <%include('tpl-option4form',{"item": item, "options": it.value, "key": j, "value": groupOption, "multiple": true})%>
+                <%include('tpl-option4form',{"item": item, "options": it.value, "key": j, "value": groupOption, "multiple": item.multiple})%>
                 {{/each}}
             </optgroup>
             {{else}}
-            <%include('tpl-option4form',{"item": item, "options": item.options, "key": i, "value": it, "multiple": true})%>
+            <%include('tpl-option4form',{"item": item, "options": item.options, "key": i, "value": it, "multiple": item.multiple})%>
             {{/if}}
         {{/each}}
         </select>
-    {{else}}
-        <select class="input-medium {{item.className}}" id="select{{item.name}}" name="{{item.name}}"{{if item.required}} required{{/if}}>
-        {{if item.hasEmpty}}<option value="">{{item.emptyText}}</option>{{/if}}
-        {{each item.options it i}}
-            <%include('tpl-option4form',{"item": item, "options": item.options, "key": i, "value": it})%>
-        {{/each}}
-        </select>
-    {{/if}}
     </div>
 </script>
 <!-- 自定义html -->

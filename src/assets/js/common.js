@@ -1,7 +1,7 @@
 /**
  * 公共函数
  */
-define(['jquery', 'lodash', 'layer'], function ($, _) {
+define(['jquery', 'lodash', 'layer', 'moments'], function ($, _) {
     "use strict";
     /* url 正則 */
     var reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
