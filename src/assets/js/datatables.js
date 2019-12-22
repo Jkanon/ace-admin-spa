@@ -2,7 +2,7 @@
  * jquery.dataTables的封装
  * @author im.Jkanon@gmail.com
  */
-define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
+define(['common', 'datatables.net-bs'], function(common){
     "use strict";
 
     jQuery.fn.dataTableExt.oApi.fnProcessingIndicator = function ( oSettings, onoff )
@@ -13,14 +13,14 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         this.oApi._fnProcessingDisplay( oSettings, onoff );
     };
 
-    //外部接口
+    // 外部接口
     var table = {
-        //全局配置项
+        // 全局配置项
         config: {
-            checkName: 'CHECKED' //是否选中状态的字段名
-            ,indexName: 'TABLE_INDEX' //下标索引名
+            checkName: 'CHECKED' // 是否选中状态的字段名
+            ,indexName: 'TABLE_INDEX' // 下标索引名
         }
-        ,cache: {} //数据缓存
+        ,cache: {} // 数据缓存
         ,index: 0
 
         //设置全局项
@@ -29,20 +29,18 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
             that.config = $.extend({}, that.config, options);
             return that;
         }
-
-        //事件监听
-        ,on: function(events, callback){
-            return layui.onevent.call(this, MOD_NAME, events, callback);
-        }
     }
 
-    //操作当前实例
+    // 操作当前实例
     ,thisTable = function(){
         var that = this
             ,options = that.config
-            ,id = options.id;
+            ,id = options.id || options.index;
 
-        id && (thisTable.config[id] = options);
+        if(id){
+            thisTable.that[id] = that; //记录当前实例对象
+            thisTable.config[id] = options; //记录当前实例配置项
+        }
 
         return {
             config: options,
@@ -59,6 +57,14 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         }
     }
 
+    // 获取当前实例配置项
+    ,getThisTableConfig = function(id){
+        var config = thisTable.config[id];
+        if(!config) console.error('The ID option was not found in the table instance');
+        return config || null;
+    }
+
+    // 获取属性数据，功能同_.result
     ,result= function(obj, keyPath) {
         keyPath = keyPath.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
         keyPath = keyPath.replace(/^\./, '');           // strip a leading dot
@@ -74,6 +80,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         return obj;
     }
 
+    // 转义html
     ,escapeHTML = function (text) {
         if (typeof text === 'string') {
             return text
@@ -87,75 +94,75 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         return text;
     }
 
-    //字符常量
+    // 字符常量
     ,MOD_NAME = 'datatable'
     ,EMPTY_STR = ''
 
-    //thead区域模板
+    // thead区域模板
     ,TPL_HEADER = function(){
         return [
             '<thead>',
             '{{each cols item1 i1}}',
-            '<tr>',
-            '{{if detailView }}<th></th>{{/if}}',
-            '{{each item1 item2 i2}}',
-            '<th {{if item2.type==="checkbox"||item2.type==="numbers"}}class="align-center"{{else if item2[align]}}class="align-{{item2[align]}}"{{/if}}>',
-            '{{if item2.type === "checkbox"}}',
-            '<label class="pos-rel">',
-            '<input name="table-checkbox" type="checkbox" filter="table-allChoose" class="ace" {{if item2[checkName]}}checked{{/if}}>',
-            '<span class="lbl"></span>',
-            '</label>',
-            '{{/if}}',
-            '{{item2.title||""}}',
-            '</th>',
-            '{{/each}}',
-            '</tr>',
+                '<tr>',
+                '{{if detailView }}<th></th>{{/if}}',
+                '{{each item1 item2 i2}}',
+                    '<th {{if item2.type==="checkbox"||item2.type==="numbers"}}class="align-center"{{else if item2[align]}}class="align-{{item2[align]}}"{{/if}}>',
+                    '{{if item2.type === "checkbox"}}',
+                        '<label class="pos-rel">',
+                            '<input name="table-checkbox" type="checkbox" filter="table-allChoose" class="ace">',
+                            '<span class="lbl"></span>',
+                        '</label>',
+                    '{{/if}}',
+                    '{{item2.title||""}}',
+                    '</th>',
+                '{{/each}}',
+                '</tr>',
             '{{/each}}',
             '</thead>'
         ].join('');
     }()
     ,TPL_BODY = '<tbody></tbody>'
-    //工具栏菜单
+    // 工具栏菜单
     ,TPL_TOOLBAR = [
             '<div class="hidden-sm hidden-xs action-buttons">',
             '{{each list item index}}',
-            '<a href="javascript:;" class="{{item.color}}{{if item.tooltip}} {{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{typeof item.tooltip.title === \'function\' ? item.tooltip.title(full): item.tooltip.title}}"{{else}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}>',
-            '<i class="ace-icon fa fa-{{item.icon}} bigger-130"></i>',
-            '</a>',
+                '<a href="javascript:;" class="{{item.color}}{{if item.tooltip}} {{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{typeof item.tooltip.title === \'function\' ? item.tooltip.title(full): item.tooltip.title}}"{{else}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}>',
+                '<i class="ace-icon fa fa-{{item.icon}} bigger-130"></i>',
+                '</a>',
             '{{/each}}',
             '</div>',
             '<div class="hidden-md hidden-lg">',
-            '<div class="inline pos-rel">',
-            '<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">',
-            '<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>',
-            '</button>',
-            '',
-            '<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">',
-            '{{each list item index}}',
-            '<li>',
-            '<a href="javascript:;" {{if item.tooltip}}class="{{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{typeof item.tooltip.title === \'function\' ? item.tooltip.title(full): item.tooltip.title}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}>',
-            '<span class="{{item.color}}">',
-            '<i class="ace-icon fa fa-{{item.icon}} bigger-120"></i>',
-            '</span>',
-            '</a>',
-            '</li>',
-            '{{/each}}',
-            '</ul>',
-            '</div>',
+                '<div class="inline pos-rel">',
+                    '<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown" data-position="auto">',
+                        '<i class="ace-icon fa fa-caret-down icon-only bigger-120"></i>',
+                    '</button>',
+                    '<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">',
+                    '{{each list item index}}',
+                        '<li>',
+                            '<a href="javascript:;" {{if item.tooltip}}class="{{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{typeof item.tooltip.title === \'function\' ? item.tooltip.title(full): item.tooltip.title}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}>',
+                            '<span class="{{item.color}}">',
+                                '<i class="ace-icon fa fa-{{item.icon}} bigger-120"></i>',
+                             '</span>',
+                        '</a>',
+                        '</li>',
+                    '{{/each}}',
+                    '</ul>',
+                '</div>',
             '</div>'
     ].join('')
-    //siwtch按钮
+    // siwtch按钮
     ,TPL_SWITCH = [
         '<label class="inline">',
-        '{{if label}}<small class="muted">{{label}}</small>{{/if}}',
-        '<input {{if data === checkedValue}}checked{{/if}} type="checkbox" class="ace ace-switch {{if type}}ace-switch-{{type}}{{/if}} {{if color}}{{color}}{{/if}}"{{if event}} ace-event="{{event}}"{{/if}}>',
-        '<span class="lbl middle"></span>',
+            '{{if label}}<small class="muted">{{label}}</small>{{/if}}',
+            '<input {{if data === checkedValue}}checked{{/if}} type="checkbox" class="ace ace-switch {{if type}}ace-switch-{{type}}{{/if}} {{if color}}{{color}}{{/if}}"{{if event}} ace-event="{{event}}"{{/if}}>',
+            '<span class="lbl middle"></span>',
         '</label>'
     ].join('')
-    //链接
+    // 链接
     ,TPL_LINK = '<a href={{href}} target="{{target}}">{{title}}</a>'
     ,_WIN = $(window)
     ,_DOC = $(document)
+    // 默认工具栏菜单集合
     ,DEFAULT_TOOLBAR = {
         'view': {
             icon: 'search-plus',
@@ -191,7 +198,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         }
     }
 
-    //构造器
+    // 构造器
     ,Class = function(options, callback){
         var that = this;
         that.index = ++table.index;
@@ -205,16 +212,16 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         }
         if (requireComponents.length > 0) {
             require(requireComponents, function() {
-                that.render();
+                that.render(callback);
                 callback && callback();
             });
         } else {
-            that.render();
+            that.render(callback);
             callback && callback();
         }
     };
 
-    //默认配置
+    // 默认配置
     Class.prototype.config = {
         deferRender: true  //延迟渲染，大数量时可以提高性能
         ,detailView: false //非父子表
@@ -258,27 +265,34 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         }
     };
 
-    //根据列类型，定制化参数
+    // 根据列类型，定制化参数
     Class.prototype.initOpts = function() {
         var that = this
             , options = that.config
             //默认宽度
             ,initWidth = {
                 checkbox: '42px'
+                ,radio: '42px'
                 ,numbers: '40px'
             };
         $.each(options.cols, function(i1, item1){
             $.each(item1, function(i2, item2){
-                if(!item2) return;
-                if(!item2.field) item2.field = item2.field || EMPTY_STR;
+                if(!item2) {
+                    item1.splice(i2, 1);
+                    return;
+                }
+
                 if(!item2.type) item2.type = "normal";
                 if(!item2.colspan) item2.colspan = 1;
                 if(!item2.rowspan) item2.rowspan = 1;
-                item2.orderable =  item2.orderable || false; //默认不排序
                 if(item2.type !== "normal"){
                     item2.width = item2.width || initWidth[item2.type];
                 }
-                if(typeof item2.escape === 'undefined') item2.escape = true;  //默认转义
+                item2.align = item2.align || ((item2.type ==='checkbox' || item2.type === 'numbers') && 'center') || '';
+                item2.escape = item2.escape === false;  //默认转义
+                // datatables相关的定义
+                if(!item2.field) item2.field = item2.field || EMPTY_STR;
+                item2.orderable = item2.orderable === true; //默认不排序
             })
         });
     };
@@ -288,8 +302,9 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         var that = this
             , options = that.config;
         options.elem = typeof(options.elem) === 'string' ? $(options.elem) : options.elem;
-        options.id = options.id || options.elem.attr('id');
+        options.id = options.id || options.elem.attr('id') || that.index;
         options.index = that.index;
+        that.key = options.id || options.index;
 
         //响应数据的自定义格式
         options.response = $.extend({
@@ -307,19 +322,13 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         that.initOpts();
 
         //开始插入替代元素
-        var othis = options.elem
-            ,reHead = template.render(TPL_HEADER, options);
-
-        if (options.title) {
-            othis.before("<div class='table-header'>" + options.title + "</div>");
-        }
-        othis.append(reHead);
-
+        that.renderTitle();
+        that.renderHeader();
         that.renderData();
         that.events();
     };
 
-    //遍历表头
+    // 遍历表头
     Class.prototype.eachCols = function(callback){
         var cols = $.extend(true, [], this.config.cols)
             ,arrs = [], index = 0;
@@ -355,7 +364,21 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         eachArrs();
     };
 
-    //数据渲染
+    // 标题栏渲染
+    Class.prototype.renderTitle = function() {
+        if (this.config.title) {
+            this.config.elem.before("<div class='table-header'>" + this.config.title + "</div>");
+        }
+    };
+
+    // 表头渲染
+    Class.prototype.renderHeader = function() {
+        var options = this.config,
+            othis = options.elem;
+        othis.append(template.render(TPL_HEADER, options));
+    };
+
+    // 数据渲染
     Class.prototype.renderData = function(){
         var that = this
             , options = that.config
@@ -388,9 +411,9 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                 if(item3.colspan > 1) return;
                 var columnDef = {
                     data: item3.field
-                    ,visible: typeof(item3.visible) === "undefined" || item3.visible
+                    ,visible: item3.hide !== true
                     ,cellType: item3.cellType || 'td'
-                    ,className: (item3.align && ('align-' + item3.align + ' ') ||  ((item3.type ==='checkbox' || item3.type === 'numbers') && 'align-center ' || '')) + (item3.className || '')
+                    ,className: (item3.align && ('align-' + item3.align + ' ')) + (item3.className || '')
                     ,orderable: item3.orderable
                     ,width: item3.width
                     ,render: function (data, type, full, meta) {
@@ -398,31 +421,29 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                         var numbers = meta.settings._iDisplayStart + meta.row + 1 ;
 
                         if (item3.type === 'checkbox' || item3.type === 'numbers') {
-                            var td = ['<div class="table-cell-' + function () { //返回对应的CSS类标识
+                            return ['<div class="table-cell-' + function () { //返回对应的CSS类标识
                                 var str = (options.index + '-' + (item3.field || i3));
                                 return item3.type === 'normal' ? str
-                                    : (str + ' laytable-cell-' + item3.type);
+                                    : (str + ' acetable-cell-' + item3.type);
                             }() +'">' + function () {
-                                var tplData = $.extend(true, {
-                                    LAY_INDEX: numbers
-                                }, item3);
                                 //渲染复选框列视图
                                 if (item3.type === 'checkbox') {
-                                    return '<label class="pos-rel"><input type="checkbox" name="table-checkbox" class="ace" ' + function () {
-                                        var checkName = table.config.checkName;
-                                        //如果是全选
-                                        if (item3[checkName]) {
-                                            item3[checkName] = item3[checkName];
-                                            return item3[checkName] ? 'checked' : '';
-                                        }
-                                        return tplData[checkName] ? 'checked' : '';
+                                    var props = options.rowSelection && options.rowSelection.getCheckProps && options.rowSelection.getCheckProps(full, meta) || {};
+                                    return '<label class="pos-rel"><input type="checkbox" name="table-checkbox" class="ace"' + function () {
+                                        var ret = '';
+                                        $.each(props, function(k, v) {
+                                            ret += ' ' + String(k);
+                                            if (typeof v !== 'boolean') {
+                                                ret += '="' + String(v) + '"';
+                                            }
+                                        });
+                                        return ret;
                                     }() + '><span class="lbl"></span></label>';
                                 } else if (item3.type === 'numbers') {
                                     return numbers;
                                 }
                             }()
                                 , '</div>'].join('');
-                            return td;
                         } else if(item3.type === 'switch' || item3["switch"]) {
                             return template.render(TPL_SWITCH, $.extend(true, {data: data}, item3["switch"]))
                         }
@@ -440,7 +461,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                                 if (typeof item3.render === "function") {
                                     return item3.render(data, type, full, meta);
                                 } else if (typeof item3.render === "object") {
-                                    return _.result(item3.render, data);
+                                    return result(item3.render, data);
                                 }
                                 return item3.render;
                             }
@@ -456,7 +477,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                                         if(toolbar.condition) {
                                             var condition = toolbar.condition;
                                             if(typeof condition === 'string') {
-                                                condition = _.result(full, condition)
+                                                condition = result(full, condition)
                                             } else if(typeof condition === 'function'){
                                                 condition = condition(full)
                                             }
@@ -476,17 +497,17 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                             }
 
                             var ret = function() {
-                                if (item3["default"]) {
-                                    return (typeof data === 'undefined' || data === '' || data === null) ? item3["default"] : String(data);
+                                if (item3.defaultContent) {
+                                    return (typeof data === 'undefined' || data === '' || data === null) ? item3.defaultContent : String(data);
                                 }
-                                return (typeof data === 'undefined' || data === null) ? (item3["default"] || EMPTY_STR) : String(data);
+                                return (typeof data === 'undefined' || data === null) ? (item3.defaultContent || EMPTY_STR) : String(data);
                             }();
                             return item3.escape ? escapeHTML(ret) : ret;
                         }();
                         //return ['<div class="dataTable-cell">', wrapperText, '</div>'].join('')
                         return wrapperText;
                     }
-                    ,defaultContent: item3["default"] || EMPTY_STR
+                    ,defaultContent: item3.defaultContent || EMPTY_STR
                 };
                 var attr = {};
                 //下面改成class
@@ -719,7 +740,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
         }
     };
 
-    //事件处理
+    // 事件处理
     Class.prototype.events = function() {
         var that = this
             ,options = that.config
@@ -728,7 +749,7 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
             , thisTable = api.table().node()
         ;
         $(thisTable)
-            //复选框选择
+            // 复选框选择
             .on('click', ace.vars['old_ie'] ? 'input[name="table-checkbox"]' : 'input[name="table-checkbox"]+', function(e){
                 var $table = $(this).closest('table');
                 if(!$table.is(thisTable))
@@ -742,11 +763,14 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                 //全选
                 if(isAll){
                     childs.each(function(i, item){
-                        if(item.checked !== checked) {
-                            $(item).closest('tr').toggleClass('selected');
-                            item.checked = checked;
+                        var $item = $(item);
+                        if (!($item.prop("disabled") || $item.hasClass("disabled"))) {
+                            if(item.checked !== checked) {
+                                $(item).closest('tr').toggleClass('selected');
+                                item.checked = checked;
+                            }
+                            that.setCheckData(i, checked);
                         }
-                        that.setCheckData(i, checked);
                     });
                     that.syncCheckAll();
                     if (!ace.vars['old_ie']) {
@@ -754,9 +778,11 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
                         e.preventDefault();
                     }
                 } else {
-                    tr.toggleClass('selected');
-                    that.setCheckData(index, checked);
-                    that.syncCheckAll();
+                    if(!(checkbox.prop("disabled") || checkbox.hasClass("disabled"))) {
+                        tr.toggleClass('selected');
+                        that.setCheckData(index, checked);
+                        that.syncCheckAll();
+                    }
                 }
                 /*filter && layui.event.call(this, MOD_NAME, 'checkbox('+ filter +')', {
                     checked: checked
@@ -880,8 +906,8 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
     table.reload = function(){
         if(arguments.length < 1)
             return;
-        var config = thisTable.config[arguments[0]];
-        if(!config) return console.log('The ID option was not found in the table instance');
+        var config = getThisTableConfig(arguments[0]);
+        if(!config) return;
         if(arguments.length ===1) {
             return config.api.ajax.reload(null, false);
         }
@@ -902,8 +928,8 @@ define(['common', 'lodash', 'datatables.net-bs'], function(common, _){
      * 新增新行
      */
     table.addRow = function (id, data) {
-        var config = thisTable.config[id];
-        if(!config) return console.log('The ID option was not found in the table instance');
+        var config = getThisTableConfig(id);
+        if(!config) return;
         config.api.row.add(data).draw(false)
     };
 

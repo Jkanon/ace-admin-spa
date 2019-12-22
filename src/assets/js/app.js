@@ -32,13 +32,14 @@ require.config({
         "jquery.chosen": "../components/chosen/chosen.jquery.min",
         "jquery.inputmask": "../components/inputmask/dist/jquery.inputmask.bundle",
         "jquery.inputlimiter": "../components/jquery-inputlimiter/jquery-inputlimiter/jquery.inputlimiter.1.3.1",
-        "jquery.validate.message-zh": "../components/jquery-validation/src/localization/messages_zh",
         "jquery.validate.min": "../components/jquery-validation/dist/jquery.validate.min",
         "jquery.additional-methods": "../components/jquery-validation/dist/additional-methods.min",
         "jquery.validate.custom": "custom.jquery.validate",
         "layer": "../components/layer/dist/layer",
         "lodash": "../components/lodash/lodash",
-        "moments": "../components/moment/min/moment.min",
+        //"moment": "../components/moment/min/moment.min",
+        "../moment": "../components/moment/min/moment.min",
+        "momentcn": "../components/moment/locale/zh-cn",
         "zTree": "../components/zTree/js/jquery.ztree.all.min"
     },
     shim: {
@@ -57,19 +58,14 @@ require.config({
         "datatables.responsive": {
             deps: ["css!../components/datatables.net-responsive-bs/css/responsive.bootstrap.min"]
         },
-        "jquery.validate.message-zh": {
-            deps: ["jquery.validate.min"]
-        },
-        "jquery.validate.custom": {
-            deps: ["jquery.validate.min"]
-        },
         "codemirror": {
             deps: ["css!../components/codemirror/lib/codemirror"]
         },
         "codemirror/shell": {
             deps: ["codemirror"]
         }
-    }
+    },
+    waitSeconds: 0
 });
 
 template.defaults.imports.console = console;

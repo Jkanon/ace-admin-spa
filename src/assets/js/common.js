@@ -1,7 +1,7 @@
 /**
  * 公共函数
  */
-define(['jquery', 'lodash', 'layer', 'moments'], function ($, _) {
+define(['jquery', 'lodash', 'layer', 'momentcn'], function ($, _) {
     "use strict";
     /* url 正則 */
     var reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -469,7 +469,7 @@ define(['jquery', 'lodash', 'layer', 'moments'], function ($, _) {
                         });
                     }
                     //TODO 待完善规则
-                    require(['jquery.additional-methods', "jquery.validate.message-zh", "jquery.validate.custom"], function () {
+                    require(["jquery.validate.custom"], function () {
                         form.validate($.extend({
                             errorElement: 'div',
                             errorClass: 'help-block',
