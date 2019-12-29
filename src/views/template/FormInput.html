@@ -77,7 +77,7 @@
 <!-- 文件上传框 -->
 <script id="tpl-upload4form" type="text/html">
     <% item.options = _.merge({ style: item.multiple ? "well" : undefined }, item.options) %>
-    <input type="file" id="txt{{item.name}}" name="{{item.name}}" class="{{item.className}}" {{item.multiple ? "multiple" : ""}} {{item.required ? "required" : ""}} {{each item.options val attr}}data-{{attr}}="{{val}}"{{/each}}/>
+    <input type="file" id="txt{{item.name}}" name="{{item.name}}" class="{{item.className}}" {{item.multiple ? "multiple" : ""}} {{item.required ? "required" : ""}} {{each item.options val attr}}data-{{attr}}="{{val}}"{{/each}} style="min-height: 100px;"/>
 </script>
 <!-- 文本域 -->
 <script id="tpl-textarea4form" type="text/html">
@@ -183,11 +183,13 @@
 </script>
 <!-- 表单模版 -->
 <script id="tpl-formInput" type="text/html">
-    <div style="padding: 15px 20px 0 20px;">
+    <div style="padding: 15px 35px 0 35px;">
         <form class="form-{{layout||'horizontal'}} clearfix" role="form">
-            {{each items item i}}
-                <%include('tpl-formItem',_.merge({}, $data, { item: item, i: i}))%>
-            {{/each}}
+            <div class="row">
+                {{each items item i}}
+                    <%include('tpl-formItem',_.merge({}, $data, { item: item, i: i}))%>
+                {{/each}}
+            </div>
         </form>
     </div>
 </script>

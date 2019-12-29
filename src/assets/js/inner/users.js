@@ -1,19 +1,19 @@
 define(['datatables', 'common', 'app'], function (datatable, common, APP) {
     return {
-        mainTable: null
-        , adminAccount: "admin"
-        , API: {
+        mainTable: null,
+        ADMIN_ACCOUNT_NAME: "admin",
+        API: {
             queryPage: "/sys/users",
             add: "/sys/users",
             edit: "/sys/users/{id}",
             "delete": "/sys/users/{id}",
             resetPwd: "/sys/users/{id}/password",
             freeze: "/sys/users/{id}/status/{status}",
-        }
-        , init: function () {
+        },
+        init: function () {
             this.initMainTable();
-        }
-        , initMainTable: function () {
+        },
+        initMainTable: function () {
             var self = this;
             self.mainTable = datatable.render({
                 elem: '#table-users',
@@ -22,11 +22,7 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                     {type: 'checkbox'},
                     {field: 'username', title: '账号'},
                     {field: 'realname', title: '姓名'},
-                    {
-                        field: 'sex', title: '性别', render: function (data) {
-                            return data === 1 ? "男" : "女"
-                        }
-                    },
+                    {field: 'sex', title: '性别', render: { 1: "男", 2: "女" }},
                     {field: 'phone', title: '手机号码'},
                     {field: 'email', title: '邮箱地址'},
                     {field: 'createTime', title: '创建时间'},
@@ -86,7 +82,7 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                 .on("freeze", function(event, options){
                     var flag = $(options.target).is(":checked");
                     if (!flag) {
-                        if (options.data.username === self.adminAccount) {
+                        if (options.data.username === self.ADMIN_ACCOUNT_NAME) {
                             message.warning("无法冻结管理员账号！");
                             $(options.target).prop("checked",true);
                             return;
@@ -101,18 +97,19 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                     });
                 })
             ;
-        }
+        },
         /**
          * 打开用户编辑窗口
          * @param type
          * @param data
+         * @param callback
          */
-        , openUserDialog: function (type, data, callback) {
+        openUserDialog: function (type, data, callback) {
             var self = this;
             APP.openFormDialog({
-                title: "用户"
-                , type: type
-                , template: {
+                title: "用户",
+                type: type,
+                template: {
                     data: {
                         items: [
                             {
@@ -125,7 +122,8 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                                 name: 'username',
                                 placeholder: '请输入用户名',
                                 required: true,
-                                colon: false
+                                colon: false,
+                                readonly: data && data.username === self.ADMIN_ACCOUNT_NAME
                             }, {
                                 type: 'radio',
                                 label: '性别',
@@ -161,27 +159,22 @@ define(['datatables', 'common', 'app'], function (datatable, common, APP) {
                         hideRequiredMark: false,
                         colon: true
                     }
-                }
-                , api: this.API
-                , callback: callback
-                , success: function(){
-                    if (data && data.loginName === self.adminAccount) {
-                        $('#txtloginName', this.form).attr('readonly' , 'true')
-                    }
-                }
+                },
+                api: this.API,
+                callback: callback
             });
-        }
+        },
 
-        , resetPassword: function(id) {
+        resetPassword: function(id) {
             common.put({
                 url: this.API.resetPwd.replace("{id}", id),
                 success: function() {
                     message.success("密码已重置！")
                 }
             })
-        }
+        },
 
-        , freeze: function(id, status, error) {
+        freeze: function(id, status, error) {
             common.put({
                 url: this.API.freeze.replace("{id}", id).replace("{status}", status),
                 success: function() {

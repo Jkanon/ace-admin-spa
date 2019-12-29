@@ -129,7 +129,8 @@ module.exports = [
         const user = {
             ...config.body,
             id: userList.length + (Math.random() * 100).toFixed(0),
-            status: 0
+            status: 0,
+            sex: typeof config.body.sex === 'string' ? parseInt(config.body.sex) : undefined
         };
         userList.unshift(user);
         return {
@@ -147,7 +148,7 @@ module.exports = [
     response: function(config) {
         for (let i = 0; i < userList.length; i++) {
             if (config.params.id === userList[i].id) {
-                userList[i] = { ...userList[i], ...config.body };
+                userList[i] = { ...userList[i], ...config.body, sex: typeof config.body.sex === 'string' ? parseInt(config.body.sex) : undefined };
                 break;
             }
         }

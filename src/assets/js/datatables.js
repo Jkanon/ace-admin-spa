@@ -64,22 +64,6 @@ define(['common', 'datatables.net-bs'], function(common){
         return config || null;
     }
 
-    // 获取属性数据，功能同_.result
-    ,result= function(obj, keyPath) {
-        keyPath = keyPath.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-        keyPath = keyPath.replace(/^\./, '');           // strip a leading dot
-        var a = keyPath.split('.');
-        for (var i = 0, n = a.length; i < n; ++i) {
-            var k = a[i];
-            if (k in obj) {
-                obj = obj[k];
-            } else {
-                return;
-            }
-        }
-        return obj;
-    }
-
     // 转义html
     ,escapeHTML = function (text) {
         if (typeof text === 'string') {
@@ -126,7 +110,7 @@ define(['common', 'datatables.net-bs'], function(common){
     ,TPL_TOOLBAR = [
             '<div class="hidden-sm hidden-xs action-buttons">',
             '{{each list item index}}',
-                '<a href="javascript:;" class="{{item.color}}{{if item.tooltip}} {{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{typeof item.tooltip.title === \'function\' ? item.tooltip.title(full): item.tooltip.title}}"{{else}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}>',
+                '<a href="javascript:;" class="{{item.color}}{{if item.tooltip}} {{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{item.tooltip.title}}"{{else}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}{{if item.disabled}} disabled{{/if}}>',
                 '<i class="ace-icon fa fa-{{item.icon}} bigger-130"></i>',
                 '</a>',
             '{{/each}}',
@@ -139,7 +123,7 @@ define(['common', 'datatables.net-bs'], function(common){
                     '<ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">',
                     '{{each list item index}}',
                         '<li>',
-                            '<a href="javascript:;" {{if item.tooltip}}class="{{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{typeof item.tooltip.title === \'function\' ? item.tooltip.title(full): item.tooltip.title}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}>',
+                            '<a href="javascript:;" {{if item.tooltip}}class="{{item.tooltip.className}}" data-rel="tooltip" data-original-title="{{item.tooltip.title}}"{{/if}} {{if item.event}}ace-event="{{item.event}}"{{/if}} {{if item.pop&&item.pop.title}}data-pop="{{typeof item.pop.title === \'function\' ? item.pop.title(full): item.pop.title}}"{{/if}}{{if item.disabled}} disabled{{/if}}>',
                             '<span class="{{item.color}}">',
                                 '<i class="ace-icon fa fa-{{item.icon}} bigger-120"></i>',
                              '</span>',
@@ -203,22 +187,14 @@ define(['common', 'datatables.net-bs'], function(common){
         var that = this;
         that.index = ++table.index;
         that.config = $.extend({}, that.config, table.config, options);
-        var requireComponents = [];
+        that.deps = [];
         if (options.treeGrid) {
-            requireComponents.push("datatables.treeGrid");
+            that.deps.push("datatables.treeGrid");
         }
         if (options.responsive !== false) {
-            requireComponents.push("datatables.responsive");
+            that.deps.push("datatables.responsive");
         }
-        if (requireComponents.length > 0) {
-            require(requireComponents, function() {
-                that.render(callback);
-                callback && callback();
-            });
-        } else {
-            that.render(callback);
-            callback && callback();
-        }
+        that.render(callback);
     };
 
     // 默认配置
@@ -298,7 +274,7 @@ define(['common', 'datatables.net-bs'], function(common){
     };
 
     //表格渲染
-    Class.prototype.render = function() {
+    Class.prototype.render = function(callback) {
         var that = this
             , options = that.config;
         options.elem = typeof(options.elem) === 'string' ? $(options.elem) : options.elem;
@@ -324,8 +300,11 @@ define(['common', 'datatables.net-bs'], function(common){
         //开始插入替代元素
         that.renderTitle();
         that.renderHeader();
-        that.renderData();
-        that.events();
+        require(that.deps, function() {
+            that.renderData();
+            that.events();
+            callback && callback();
+        });
     };
 
     // 遍历表头
@@ -421,7 +400,7 @@ define(['common', 'datatables.net-bs'], function(common){
                         var numbers = meta.settings._iDisplayStart + meta.row + 1 ;
 
                         if (item3.type === 'checkbox' || item3.type === 'numbers') {
-                            return ['<div class="table-cell-' + function () { //返回对应的CSS类标识
+                            var td = ['<div class="table-cell-' + function () { //返回对应的CSS类标识
                                 var str = (options.index + '-' + (item3.field || i3));
                                 return item3.type === 'normal' ? str
                                     : (str + ' acetable-cell-' + item3.type);
@@ -432,8 +411,12 @@ define(['common', 'datatables.net-bs'], function(common){
                                     return '<label class="pos-rel"><input type="checkbox" name="table-checkbox" class="ace"' + function () {
                                         var ret = '';
                                         $.each(props, function(k, v) {
-                                            ret += ' ' + String(k);
-                                            if (typeof v !== 'boolean') {
+                                            if (typeof v === 'boolean') {
+                                               if (v === true) {
+                                                   ret += ' ' + String(k);
+                                               }
+                                            } else {
+                                                ret += ' ' + String(k);
                                                 ret += '="' + String(v) + '"';
                                             }
                                         });
@@ -444,6 +427,7 @@ define(['common', 'datatables.net-bs'], function(common){
                                 }
                             }()
                                 , '</div>'].join('');
+                            return td;
                         } else if(item3.type === 'switch' || item3["switch"]) {
                             return template.render(TPL_SWITCH, $.extend(true, {data: data}, item3["switch"]))
                         }
@@ -461,7 +445,7 @@ define(['common', 'datatables.net-bs'], function(common){
                                 if (typeof item3.render === "function") {
                                     return item3.render(data, type, full, meta);
                                 } else if (typeof item3.render === "object") {
-                                    return result(item3.render, data);
+                                    return _.result(item3.render, data);
                                 }
                                 return item3.render;
                             }
@@ -472,24 +456,39 @@ define(['common', 'datatables.net-bs'], function(common){
                             if(item3.toolbar){
                                 if(Array.isArray(item3.toolbar)) {
                                     var list = [];
-                                    for(var i = 0, len = item3.toolbar.length; i < len; i++) {
-                                        var toolbar = item3.toolbar[i];
-                                        if(toolbar.condition) {
-                                            var condition = toolbar.condition;
-                                            if(typeof condition === 'string') {
-                                                condition = result(full, condition)
-                                            } else if(typeof condition === 'function'){
-                                                condition = condition(full)
-                                            }
-                                            if(!condition) continue
-                                        }
-
-                                        if(typeof toolbar === 'string') {
-                                            list.push(DEFAULT_TOOLBAR[toolbar]);
+                                    $.each(item3.toolbar, function(i, tb) {
+                                        if(typeof tb === 'string') {
+                                            list.push(DEFAULT_TOOLBAR[tb]);
                                         } else {
+                                            var toolbar = $.extend(true, {}, tb);
+                                            if(toolbar.condition) {
+                                                var condition = toolbar.condition;
+                                                if(typeof condition === 'string') {
+                                                    condition = _.result(full, condition)
+                                                } else if(typeof condition === 'function'){
+                                                    condition = condition(full)
+                                                }
+                                                if(!condition) return
+                                            }
+                                            if (typeof toolbar.disabled !== 'undefined') {
+                                                var disabled = toolbar.disabled;
+                                                if(typeof disabled === 'string') {
+                                                    disabled = _.result(full, disabled)
+                                                } else if(typeof disabled === 'function'){
+                                                    disabled = disabled(full)
+                                                }
+                                                toolbar.disabled = disabled;
+                                            }
+                                            if (typeof toolbar.tooltip !== 'undefined') {
+                                                var title = toolbar.tooltip.title;
+                                                if(typeof title === 'function'){
+                                                    title = title(full)
+                                                }
+                                                toolbar.tooltip.title = title;
+                                            }
                                             list.push(toolbar);
                                         }
-                                    }
+                                    });
 
                                     return template.render(TPL_TOOLBAR, {list: list, full: full});
                                 }
@@ -523,7 +522,7 @@ define(['common', 'datatables.net-bs'], function(common){
 
                 //排序方向
                 if(item3.order) {
-                    item3.sort = item3.order.toLowerCase() === 'asc' || 'desc'
+                    item3.sort = item3.order.toLowerCase() === 'asc' || 'desc';
                     order.push([detailView ? i3+1 : i3, item3.order]);
                 }
             });
@@ -540,12 +539,16 @@ define(['common', 'datatables.net-bs'], function(common){
             ,pageLength: options.pageLength
             ,paging: options.paging
             ,searching: options.searching
+            ,search: options.search
+            // TODO searchCols放到各个列定义中去
+            ,searchCols: options.searchCols
+            ,contentPadding: options.contentPadding
             ,info: options.info
             ,autoWidth: options.autoWidth
             ,scrollCollapse: true
             // TODO 使用treeGrid的时候不能使用延迟渲染 —— 之后可以在treeGrid中手动调用draw
             ,deferRender: options.treeGrid ? false : options.deferRender
-            , dom: options.dom || (options.searchingDisplay ? null :
+            ,dom: options.dom || (options.searchingDisplay ? null :
                     "<'row'<'col-sm-6'l>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>"
@@ -554,6 +557,7 @@ define(['common', 'datatables.net-bs'], function(common){
             ,treeGrid: options.treeGrid
             ,order: order
             ,columns: columnsDef
+            // TODO 改成新版的ajax.data
             ,fnServerParams: options.fnServerParams
             ,drawCallback: function (settings) {
                 //各级容器
@@ -652,16 +656,16 @@ define(['common', 'datatables.net-bs'], function(common){
                 }
                 ,dataSrc: function (res) {
                     var data = [];
-                    if(result(res, response.statusName) !== response.statusCode) {
+                    if(_.result(res, response.statusName) !== response.statusCode) {
                         layer.msg("请求出错了！", {icon: 5});
                         that.elem.fnProcessingIndicator(false);
                         res.recordsTotal = 0;
                         res.recordsFiltered = 0;
                     } else {
-                        res.draw = result(res, response.draw);
-                        res.recordsTotal = result(res, response.countName);
-                        res.recordsFiltered = result(res, response.filterCountName);
-                        data = result(res, response.dataName);
+                        res.draw = _.result(res, response.draw);
+                        res.recordsTotal = _.result(res, response.countName);
+                        res.recordsFiltered = _.result(res, response.filterCountName);
+                        data = _.result(res, response.dataName);
                     }
                     data = function() {
                         //回调
@@ -740,7 +744,7 @@ define(['common', 'datatables.net-bs'], function(common){
         }
     };
 
-    // 事件处理
+    //事件处理
     Class.prototype.events = function() {
         var that = this
             ,options = that.config
@@ -749,7 +753,7 @@ define(['common', 'datatables.net-bs'], function(common){
             , thisTable = api.table().node()
         ;
         $(thisTable)
-            // 复选框选择
+            //复选框选择
             .on('click', ace.vars['old_ie'] ? 'input[name="table-checkbox"]' : 'input[name="table-checkbox"]+', function(e){
                 var $table = $(this).closest('table');
                 if(!$table.is(thisTable))
@@ -802,8 +806,8 @@ define(['common', 'datatables.net-bs'], function(common){
                     ,tr = othis.parents('tr').eq(0)
                     ,row = api.row(tr)
                     ,index = row.index()
-                    ,ELEM_CLICK = 'layui-table-click'
-                    ,data = table.cache[that.key][index]
+                    ,ELEM_CLICK = 'ace-table-click'
+                    ,data = row.data()
                 ;
 
                 if(!othis.parents('table.dataTable').eq(0).is(api.table().node()))
@@ -814,25 +818,24 @@ define(['common', 'datatables.net-bs'], function(common){
                 var triggerEvent = function(layero, layeroIndex) {
                     that.elem.trigger(
                         event, [{
-                            data: table.clearCacheKey(data)
+                            data: data
                             , target: self
                             , table: that.elem
                             , event: event
                             , row: row
                             , tr: tr
-                            , layeroIndex: layeroIndex  //popconfirm
-                            , del: function () {
-                                table.cache[that.key][index] = [];
-                                row.remove().draw(false);
+                            , layeroIndex: layeroIndex  //only in popconfirm
+                            , del: function (redraw) {
+                                row.remove().invalidate();
+                                if (redraw !== false) {
+                                    row.draw(false)
+                                }
                             }
-                            , update: function (fields) {
-                                fields = fields || {};
-                                $.each(fields, function (key, value) {
-                                    if (key in data) {
-                                        data[key] = value;
-                                    }
-                                });
-                                row.data(data).draw(false);
+                            , update: function (fields, redraw) {
+                                row.data(fields).invalidate();
+                                if (redraw === true) {
+                                    row.draw(false);
+                                }
                             }
                         }]
                     );
@@ -848,6 +851,7 @@ define(['common', 'datatables.net-bs'], function(common){
                     triggerEvent();
                 }
 
+                // TODO 添加样式区分操作栏点击选中行
                 tr.addClass(ELEM_CLICK).siblings('tr').removeClass(ELEM_CLICK);
             })
             //折叠展开
@@ -870,14 +874,14 @@ define(['common', 'datatables.net-bs'], function(common){
             } )
     };
 
-    //表格选中状态
+    // 表格选中状态
     table.checkStatus = function(id){
         var nums = 0
             ,invalidNum = 0
             ,arr = []
             ,data = table.cache[id] || []
         ;
-        //计算全选个数
+        // 计算全选个数
         $.each(data, function(i, item){
             if(item.constructor === Array){
                 invalidNum++; //无效数据，或已删除的
@@ -894,8 +898,9 @@ define(['common', 'datatables.net-bs'], function(common){
         };
     };
 
-    //表格重载
-    thisTable.config = {};
+    // 表格重载
+    thisTable.that = {}; //记录所有实例对象
+    thisTable.config = {}; //记录所有实例配置项
 
     /**
      * 表格重载
